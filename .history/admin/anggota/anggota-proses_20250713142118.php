@@ -32,13 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_user = $conn->insert_id;
     $stmt->close();
 
-    // Validasi id_user
-    if (!$id_user) {
-        error_log('ID User tidak valid: ' . $conn->error);
-        header('Location: anggota.php?status=error&message=Gagal membuat akun pengguna');
-        exit;
-    }
-
     // Then create anggota
     $nama = $_POST['nama'] ?? '';
     $nim = $_POST['nim'] ?? '';
@@ -46,14 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $no_hp = $_POST['no_hp'] ?? '';
     
-    // Debug NIM
-    error_log('NIM yang diperiksa: ' . $nim);
+    // Periksa apakah nim sudah ada
     $check_stmt = $conn->prepare('SELECT COUNT(*) FROM anggota WHERE nim = ?');
     $check_stmt->bind_param('s', $nim);
     $check_stmt->execute();
     $check_stmt->bind_result($count);
     $check_stmt->fetch();
-    error_log('Jumlah NIM ditemukan: ' . $count);
     $check_stmt->close();
 
     if ($count > 0) {
@@ -64,13 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare('INSERT INTO anggota (nama, nim, alamat, email, no_hp, id_user) VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->bind_param('sssssi', $nama, $nim, $alamat, $email, $no_hp, $id_user);
     
-    // Debug query INSERT anggota
-    error_log('Query INSERT anggota: ' . $stmt->error);
-
     if ($stmt->execute()) {
         header('Location: anggota.php?status=success&message=Anggota berhasil ditambahkan');
     } else {
-        error_log('Error INSERT anggota: ' . $stmt->error);
         header('Location: anggota.php?status=error&message=Gagal menambahkan anggota');
     }
     $stmt->close();

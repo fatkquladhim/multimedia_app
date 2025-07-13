@@ -64,13 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare('INSERT INTO anggota (nama, nim, alamat, email, no_hp, id_user) VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->bind_param('sssssi', $nama, $nim, $alamat, $email, $no_hp, $id_user);
     
-    // Debug query INSERT anggota
-    error_log('Query INSERT anggota: ' . $stmt->error);
-
     if ($stmt->execute()) {
         header('Location: anggota.php?status=success&message=Anggota berhasil ditambahkan');
     } else {
-        error_log('Error INSERT anggota: ' . $stmt->error);
         header('Location: anggota.php?status=error&message=Gagal menambahkan anggota');
     }
     $stmt->close();
