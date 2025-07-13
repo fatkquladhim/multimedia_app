@@ -48,21 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Proses upload foto
     $foto = '';
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-        $max_size = 2 * 1024 * 1024; // 2MB
-
-        if (in_array($_FILES['foto']['type'], $allowed_types) && $_FILES['foto']['size'] <= $max_size) {
-            $foto = 'uploads/' . basename($_FILES['foto']['name']);
-            if (!move_uploaded_file($_FILES['foto']['tmp_name'], '../../' . $foto)) {
-                error_log('Gagal memindahkan file foto: ' . $_FILES['foto']['name']);
-                header('Location: anggota.php?status=error&message=Gagal mengunggah foto');
-                exit;
-            }
-        } else {
-            error_log('File foto tidak valid: ' . $_FILES['foto']['name']);
-            header('Location: anggota.php?status=error&message=File foto tidak valid');
-            exit;
-        }
+        $foto = 'uploads/' . basename($_FILES['foto']['name']);
+        move_uploaded_file($_FILES['foto']['tmp_name'], '../../' . $foto);
     }
 
     $stmt = $conn->prepare('INSERT INTO anggota (nama, foto, alamat, email, no_hp, id_user) VALUES (?, ?, ?, ?, ?, ?)');
