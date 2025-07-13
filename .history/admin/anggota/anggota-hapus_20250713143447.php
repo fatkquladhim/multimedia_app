@@ -11,16 +11,12 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
     
-    // Debug id
-    error_log('ID yang diperiksa: ' . $id);
-
     // Get user_id first
     $stmt = $conn->prepare("SELECT id_user FROM anggota WHERE id = ?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    error_log('Hasil query SELECT anggota: ' . json_encode($row));
     
     if ($row && $row['id_user']) {
         // Hapus data terkait di tabel legalisasi_laptop
