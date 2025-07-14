@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db_config.php';
+require_once '../../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 // Periksa parameter ID dari URL
@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     
     // Query data legalisasi beserta data anggota
-    $stmt = $conn->prepare("SELECT l.*, a.nama, a.email, a.no_hp
+    $stmt = $conn->prepare("SELECT l.*, a.nama, a.email, a.telepon 
                           FROM legalisasi_laptop l 
                           JOIN anggota a ON l.id_anggota = a.id 
                           WHERE l.id = ?");
@@ -85,7 +85,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Telepon</p>
-                                <p class="font-medium"><?= htmlspecialchars($data['no_hp']) ?></p>
+                                <p class="font-medium"><?= htmlspecialchars($data['telepon']) ?></p>
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
                     <h2 class="text-xl font-semibold mb-4 text-gray-800">Foto Bukti</h2>
                     <div class="border rounded-lg p-4 flex justify-center">
                         <?php if ($data['file_bukti']): ?>
-                            <img src="../uploads/legalisasi/<?= htmlspecialchars($data['file_bukti']) ?>" 
+                            <img src="../../uploads/legalisasi/<?= htmlspecialchars($data['file_bukti']) ?>" 
                                  alt="Foto bukti laptop <?= htmlspecialchars($data['merk']) ?> <?= htmlspecialchars($data['serial_number']) ?>"
                                  class="max-h-64">
                         <?php else: ?>

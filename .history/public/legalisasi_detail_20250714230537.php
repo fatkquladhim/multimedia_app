@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
                     <h2 class="text-xl font-semibold mb-4 text-gray-800">Foto Bukti</h2>
                     <div class="border rounded-lg p-4 flex justify-center">
                         <?php if ($data['file_bukti']): ?>
-                            <img src="../uploads/legalisasi/<?= htmlspecialchars($data['file_bukti']) ?>" 
+                            <img src="../../uploads/legalisasi/<?= htmlspecialchars($data['file_bukti']) ?>" 
                                  alt="Foto bukti laptop <?= htmlspecialchars($data['merk']) ?> <?= htmlspecialchars($data['serial_number']) ?>"
                                  class="max-h-64">
                         <?php else: ?>

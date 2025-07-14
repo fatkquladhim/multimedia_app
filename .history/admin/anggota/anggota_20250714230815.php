@@ -29,7 +29,7 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         <td><?php echo htmlspecialchars($row['no_hp']); ?></td>
         <td>
             <?php if ($row['foto']) { ?>
-                <img src="../../uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="Foto Anggota" width="50">
+                <img src="../../uploads/?php echo htmlspecialchars($row['foto']); ?>" alt="Foto Anggota" width="50">
             <?php } ?>
         </td>
         <td>

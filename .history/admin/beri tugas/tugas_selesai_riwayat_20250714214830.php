@@ -83,7 +83,7 @@ $result = $conn->query($query);
             <tr>
                 <td><?php echo $no++; ?></td>
                 <td><?php echo htmlspecialchars($row['judul']); ?></td>
-                <td><?php echo htmlspecialchars($row['penerima_username'] ); ?></td>
+                <td><?php echo htmlspecialchars($row['penerima_username'] . ' (' . ($row['penerima_nama_lengkap'] ?? 'Nama tidak ada') . ')'); ?></td>
                 <td><?php echo date('d/m/Y', strtotime($row['deadline'])); ?></td>
                 <td><?php echo htmlspecialchars($row['status']); ?></td>
                 <td>
