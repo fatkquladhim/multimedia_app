@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="form-group">
-                <label>alatg:</label>
+                <label>alat:</label>
                 <select name="id_alat" required>
                     <?php 
                     while($row = $alat->fetch_assoc()): 
