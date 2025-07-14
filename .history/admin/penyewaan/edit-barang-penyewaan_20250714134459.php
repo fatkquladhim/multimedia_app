@@ -109,9 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="hidden" name="jumlah_lama" value="<?php echo $penyewaan['jumlah']; ?>">
             
             <div class="form-group">
-                <label>Penyewa:</label><br>
-                <?php if ($penyewaan['tipe_penyewa'] === 'umum'): ?>
-                    <input type="text" value="<?php echo htmlspecialchars($penyewaan['nama_penyewa']); ?>" disabled>
+                <label>Peminjam:</label><br>
+                <?php if ($penyewaan['tipe_peminjam'] === 'umum'): ?>
+                    <input type="text" value="<?php echo htmlspecialchars($penyewaan['nama_peminjam']); ?>" disabled>
+                    (<?php echo htmlspecialchars($penyewaan['kontak_peminjam']); ?>)
                 <?php else: ?>
                     <input type="text" value="<?php echo htmlspecialchars($penyewaan['nama_anggota']); ?>" disabled>
                 <?php endif; ?>

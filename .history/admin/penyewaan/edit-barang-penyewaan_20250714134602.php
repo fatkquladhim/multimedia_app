@@ -112,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Penyewa:</label><br>
                 <?php if ($penyewaan['tipe_penyewa'] === 'umum'): ?>
                     <input type="text" value="<?php echo htmlspecialchars($penyewaan['nama_penyewa']); ?>" disabled>
+                    (<?php echo htmlspecialchars($penyewaan['kontak_penyewa']); ?>)
                 <?php else: ?>
                     <input type="text" value="<?php echo htmlspecialchars($penyewaan['nama_anggota']); ?>" disabled>
                 <?php endif; ?>

@@ -43,27 +43,22 @@ $anggota = $conn->query("SELECT id, nama FROM anggota ORDER BY nama");
             <label>Merk Laptop:</label><br>
             <input type="text" name="merk" required>
         </div>
+        
         <div>
             <label>Tipe:</label><br>
             <input type="text" name="tipe" required>
         </div>
+        
         <div>
             <label>Serial Number:</label><br>
             <input type="text" name="serial_number" required>
         </div>
-        <div>
-            <label>Status Laptop:</label><br>
-            <select name="status" required>
-                <option value="">Pilih Status</option>
-                <option value="Baik">Baik</option>
-                <option value="Rusak">Rusak</option>
-                <option value="Perlu Perbaikan">Perlu Perbaikan</option>
-            </select>
-        </div>
+        
         <div>
             <label>Upload Bukti (Foto Laptop):</label><br>
             <input type="file" name="file_bukti" accept="image/*" required>
         </div>
+        
         <br>
         <button type="submit">Simpan</button>
         <a href="legalisasi_list.php">Kembali</a>

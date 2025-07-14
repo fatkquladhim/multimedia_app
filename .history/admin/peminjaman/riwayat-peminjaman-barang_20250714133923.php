@@ -80,11 +80,9 @@ $result = $conn->query($query);
                         <td><?php echo date('d/m/Y', strtotime($row['tanggal_pinjam'])); ?></td>
                         <td><?php echo $row['tanggal_kembali'] ? date('d/m/Y', strtotime($row['tanggal_kembali'])) : '-'; ?></td>
                         <td><?php echo $row['jumlah']; ?></td>
+                        <td><?php echo $row['jumlah']; ?></td>
                         <td>
-                           
-                        <a href="edit-barang-peminjaman.php?id=<?php echo $row['id']; ?>">Edit</a>
-                        <a href="hapus-peminjaman.php?id=<?php echo $row['id']; ?>" 
-                           onclick="return confirm('Apakah Anda yakin ingin menghapus peminjaman ini?')">Hapus</a>
+                            <a href="riwayat-peminjaman-hapus.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Yakin ingin menghapus riwayat ini?')">Hapus</a>
                         </td>
                     </tr>
                     <?php endwhile; ?>

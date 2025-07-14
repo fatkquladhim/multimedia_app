@@ -67,8 +67,13 @@ $result = $conn->query($query);
                 </td>
                 <td><?php echo htmlspecialchars($row['status']); ?></td>
                 <td>
-                    <a href="legalisasi_edit.php?id=<?php echo $row['id']; ?>">Edit</a> |
-                    <a href="legalisasi_hapus.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Yakin ingin menghapus legalisasi ini?')">Hapus</a>
+                    <?php if($row['status'] == 'pending'): ?>
+                        <form action="legalisasi_store.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                            <button type="submit" name="action" value="approve">Setujui</button>
+                            <button type="submit" name="action" value="reject">Tolak</button>
+                        </form>
+                    <?php endif; ?>
                 </td>
             </tr>
             <?php endwhile; ?>
