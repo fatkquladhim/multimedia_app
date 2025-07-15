@@ -8,9 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     // Query user
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
     $stmt = $conn->prepare('SELECT id, username, password, role FROM users WHERE username = ?');
     $stmt->bind_param('s', $username);
     $stmt->execute();
@@ -30,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Password salah!';
         }
     } else {
-        $error = 'User  tidak ditemukan!';
+        $error = 'User tidak ditemukan!';
     }
     $stmt->close();
     $conn->close();
@@ -44,6 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Blue Login Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        .custom-blue-300 {
+            --tw-gradient-to: #0074f5 var(--tw-gradient-to-position);
+        }
         .glass-input {
             background: rgba(59, 130, 246, 0.2);
             border: 1px solid rgba(147, 197, 253, 0.3);
@@ -66,6 +66,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
+        
+        .profile-circle {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .checkbox-custom {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(147, 197, 253, 0.6);
+            border-radius: 3px;
+            background: rgba(59, 130, 246, 0.1);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .checkbox-custom:checked {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(147, 197, 253, 0.8);
+        }
+        
+        .checkbox-custom:checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 1px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-300 flex items-center justify-center p-4">
@@ -73,17 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Profile Picture -->
         <div class="flex justify-center mb-8">
             <div>
-                <img src="../public/assets/imgs/rev-removebg-preview.png" style="max-width:120px;">
+                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <img src="../public/assets/imgs/rev-removebg-preview.png" style="max-width:120px;">
+                </svg>
             </div>
         </div>
 
         <!-- Login Form -->
-        <form method="post" class="space-y-6">
-            <!-- Error Message -->
-            <?php if ($error): ?>
-                <p class="text-red-500 text-center"><?php echo $error; ?></p>
-            <?php endif; ?>
-
+         <div class="space-y-6">
+         <form method="post" class="flex justify-center mb-8" >
             <!-- Username Field -->
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -96,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     name="username"
                     id="username"
                     placeholder="Username"
-                    class="glass-input w-full pl-12 pr-4 py-4 rounded-full text-white placeholder-blue-100 focus:outline-none transition-all duration-200"
-                    required
+                     class="glass-input w-full pl-12 pr-4 py-4 rounded-full text-white placeholder-blue-100 focus:outline-none transition-all duration-200"
                 />
             </div>
 
@@ -114,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id="password"
                     placeholder="Password"
                     class="glass-input w-full pl-12 pr-4 py-4 rounded-full text-white placeholder-blue-100 focus:outline-none transition-all duration-200"
-                    required
                 />
             </div>
 
@@ -131,16 +158,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="#" class="text-blue-100 hover:text-white transition-colors duration-200">
                     Forgot Password?
                 </a>
+            </form>
             </div>
-
             <!-- Login Button -->
             <button
                 type="submit"
                 class="login-btn w-full py-4 text-blue-600 font-semibold rounded-full focus:outline-none"
+                onclick="handleLogin()"
             >
                 LOGIN
             </button>
-        </form>
+        </div>
+
+        <!-- Footer -->
     </div>
+
+    <script>
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            if (!username || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Simulate login process
+            alert(`Login attempted for: ${username}\nRemember me: ${remember}`);
+            
+            // Here you would typically send the data to your server
+            console.log('Login data:', { username, password, remember });
+        }
+        
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+        
+        // Add focus effects
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-105');
+            });
+        });
+    </script>
 </body>
 </html>
