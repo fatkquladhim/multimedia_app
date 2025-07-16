@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
-    header('Location: ../auth/login.php');
+    header('Location: ../../auth/login.php');
     exit;
 }
 
-require_once '../includes/db_config.php';
+require_once '../../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $id_user = $_SESSION['user_id'];
 
@@ -130,29 +130,29 @@ $result = $stmt->get_result();
 
                 <!-- Navigation -->
                 <nav class="space-y-2">
-                    <a href="./dashboard.php" class="flex items-center space-x-3 px-4 py-3 text-purple-600 bg-purple-50 rounded-lg border-l-4 border-purple-600 sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-600 bg-purple-50 rounded-lg border-l-4 border-purple-600 sidebar-nav-item">
                         <i class="fas fa-th-large flex-shrink-0"></i>
                         <span class="font-medium sidebar-text">Dashboard</span>
                     </a>
 
-                    <a href="./portfolio/portfolio.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-edit flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">portfoilo</span>
+                        <span class="font-medium sidebar-text">Editor</span>
                     </a>
 
-                    <a href="./izin malam/izin-malam.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-users flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">izin malam</span>
+                        <span class="font-medium sidebar-text">Leads</span>
                     </a>
 
-                    <a href="./izin nugas/izin-nugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-cog flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">izin nugas</span>
+                        <span class="font-medium sidebar-text">Settings</span>
                     </a>
 
-                    <a href="./tugas/riwayat_tugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-eye flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">riwayat tugas</span>
+                        <span class="font-medium sidebar-text">Preview</span>
                     </a>
                 </nav>
 
@@ -195,10 +195,10 @@ $result = $stmt->get_result();
                             </button>
                             <div class="flex items-center space-x-2">
                                 <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">FA</span>
+                                    <span class="text-white font-bold text-sm">AJ</span>
                                 </div>
                                 <div class="flex items-center space-x-1">
-                                    <span class="font-medium text-gray-800">Fatkqul adhim</span>
+                                    <span class="font-medium text-gray-800">Alyssa Jones</span>
                                     <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
                                 </div>
                             </div>
@@ -278,7 +278,7 @@ $result = $stmt->get_result();
                             </span>
                             <span class="text-sm font-bold <?= $action_color ?>">
                                 <?php if (!$row['jawaban_id']): // If no answer submitted yet ?>
-                                    <a href="./tugas/tugas_kerjakan.php?id=<?php echo $row['id']; ?>">Kerjakan</a>
+                                    <a href="tugas_kerjakan.php?id=<?php echo $row['id']; ?>">Kerjakan</a>
                                 <?php else: // If answer already submitted ?>
                                     Sudah dikerjakan
                                 <?php endif; ?>
@@ -302,60 +302,170 @@ $result = $stmt->get_result();
                 </div>
 
                 <!-- Bottom Section (Popular Categories and Top Mentors remain unchanged as per original context) -->
-                 <div class="space-y-4">
-                        <!-- Next in Fashion -->
-                        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-20 h-20 bg-yellow-400 rounded-xl flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-tshirt text-white text-2xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="text-lg font-semibold text-gray-800">Izin malam hari ini</h4>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-gray-600">Private</span>
-                                            <div class="w-3 h-3 bg-purple-600 rounded-full"></div>
-                                        </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Popular Categories -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Popular Categories</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-purple-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-palette text-purple-600"></i>
                                     </div>
-                                    <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-gray-600 hover:text-gray-800">
-                                                <a href="./izin malam/izin-malam-entry.php">izin sekarang</a>
-                                            </button>
-                                        </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">UI/UX Design</h4>
+                                        <p class="text-sm text-gray-600">18 Course</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Digital Marketing Today -->
-                        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-chart-bar text-white text-2xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="text-lg font-semibold text-gray-800">Izin malam hari ini</h4>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-gray-600">Private</span>
-                                            <div class="w-3 h-3 bg-purple-600 rounded-full"></div>
-                                        </div>
+                            <div class="flex items-center justify-between p-4 bg-orange-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-bullhorn text-orange-600"></i>
                                     </div>
-                                    <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-gray-600 hover:text-gray-800">
-                                                <a href="./izin nugas/izin-nugas-entry.php">izin sekarang</a>
-                                            </button>
-                                        </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Marketing</h4>
+                                        <p class="text-sm text-gray-600">34 Course</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-code text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Development</h4>
+                                        <p class="text-sm text-gray-600">126 Course</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-chart-line text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Business</h4>
+                                        <p class="text-sm text-gray-600">213 Course</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Top Mentors -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Top Mentors</h3>
+                            <button class="text-orange-500 hover:text-orange-600 font-medium">View All</button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                                        <img src="https://via.placeholder.com/40x40" alt="Shine Smith" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Shine Smith</h4>
+                                        <p class="text-sm text-gray-600">UI/UX Designer</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-800">18 Course</p>
+                                    <p class="text-sm text-gray-600">1200 Follower</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600">Follow</button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                                        <img src="https://via.placeholder.com/40x40" alt="Mikel" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Mikel</h4>
+                                        <p class="text-sm text-gray-600">Marketer</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-800">24 Course</p>
+                                    <p class="text-sm text-gray-600">900 Follower</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600">Follow</button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                                        <img src="https://via.placeholder.com/40x40" alt="Tohid golakar" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Tohid golakar</h4>
+                                        <p class="text-sm text-gray-600">Android Developer</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-800">64 Course</p>
+                                    <p class="text-sm text-gray-600">1590 Follower</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600">Follow</button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                                        <img src="https://via.placeholder.com/40x40" alt="Md Sakib" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Md Sakib</h4>
+                                        <p class="text-sm text-gray-600">Frontend Developer</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-800">85 Course</p>
+                                    <p class="text-sm text-gray-600">3400 Follower</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600">Follow</button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
             </div>
         </div>

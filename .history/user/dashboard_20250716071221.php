@@ -130,29 +130,29 @@ $result = $stmt->get_result();
 
                 <!-- Navigation -->
                 <nav class="space-y-2">
-                    <a href="./dashboard.php" class="flex items-center space-x-3 px-4 py-3 text-purple-600 bg-purple-50 rounded-lg border-l-4 border-purple-600 sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-purple-600 bg-purple-50 rounded-lg border-l-4 border-purple-600 sidebar-nav-item">
                         <i class="fas fa-th-large flex-shrink-0"></i>
                         <span class="font-medium sidebar-text">Dashboard</span>
                     </a>
 
-                    <a href="./portfolio/portfolio.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-edit flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">portfoilo</span>
+                        <span class="font-medium sidebar-text">Editor</span>
                     </a>
 
-                    <a href="./izin malam/izin-malam.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-users flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">izin malam</span>
+                        <span class="font-medium sidebar-text">Leads</span>
                     </a>
 
-                    <a href="./izin nugas/izin-nugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-cog flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">izin nugas</span>
+                        <span class="font-medium sidebar-text">Settings</span>
                     </a>
 
-                    <a href="./tugas/riwayat_tugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-eye flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">riwayat tugas</span>
+                        <span class="font-medium sidebar-text">Preview</span>
                     </a>
                 </nav>
 
@@ -195,10 +195,10 @@ $result = $stmt->get_result();
                             </button>
                             <div class="flex items-center space-x-2">
                                 <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">FA</span>
+                                    <span class="text-white font-bold text-sm">AJ</span>
                                 </div>
                                 <div class="flex items-center space-x-1">
-                                    <span class="font-medium text-gray-800">Fatkqul adhim</span>
+                                    <span class="font-medium text-gray-800">Alyssa Jones</span>
                                     <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
                                 </div>
                             </div>
@@ -278,7 +278,7 @@ $result = $stmt->get_result();
                             </span>
                             <span class="text-sm font-bold <?= $action_color ?>">
                                 <?php if (!$row['jawaban_id']): // If no answer submitted yet ?>
-                                    <a href="./tugas/tugas_kerjakan.php?id=<?php echo $row['id']; ?>">Kerjakan</a>
+                                    <a href="tugas_kerjakan.php?id=<?php echo $row['id']; ?>">Kerjakan</a>
                                 <?php else: // If answer already submitted ?>
                                     Sudah dikerjakan
                                 <?php endif; ?>
@@ -319,7 +319,6 @@ $result = $stmt->get_result();
                                     </div>
                                     <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
                                         <div class="flex items-center space-x-2">
                                             <button class="p-2 text-gray-600 hover:text-gray-800">
                                                 <a href="./izin malam/izin-malam-entry.php">izin sekarang</a>
@@ -341,15 +340,18 @@ $result = $stmt->get_result();
                                         <h4 class="text-lg font-semibold text-gray-800">Izin malam hari ini</h4>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm text-gray-600">Private</span>
-                                            <div class="w-3 h-3 bg-purple-600 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
                                         </div>
                                     </div>
                                     <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
+                                        <span class="text-sm font-medium text-gray-700">10 Slides</span>
                                         <div class="flex items-center space-x-2">
                                             <button class="p-2 text-gray-600 hover:text-gray-800">
-                                                <a href="./izin nugas/izin-nugas-entry.php">izin sekarang</a>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="p-2 text-gray-600 hover:text-gray-800">
+                                                <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
                                     </div>
