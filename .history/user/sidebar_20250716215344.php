@@ -2,7 +2,6 @@
     <!-- Logo -->
     <div class="flex items-center space-x-2 mb-8" style="text-align: center;">
            <img src="../../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
-           <span class="text-xl font-bold text-gray-800 sidebar-logo-text">Pitch.io</span>
     </div>
 
     <!-- Navigation -->
@@ -18,23 +17,19 @@
         </a>
 
         <a href="../izin malam/izin-malam.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
-            <i class="fas fa-moon flex-shrink-0"></i>
+            <i class="fas fa-users flex-shrink-0"></i>
             <span class="font-medium sidebar-text">Izin Malam</span>
         </a>
 
         <a href="../izin nugas/izin-nugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
-            <i class="fas fa-laptop-code flex-shrink-0"></i>
+            <i class="fas fa-cog flex-shrink-0"></i>
             <span class="font-medium sidebar-text">Izin Nugas</span>
         </a>
 
         <a href="../tugas/riwayat_tugas.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
-            <i class="fas fa-history flex-shrink-0"></i>
+            <i class="fas fa-eye flex-shrink-0"></i>
             <span class="font-medium sidebar-text">Riwayat Tugas</span>
-        </a>
-
-        <a href="../auth/logout.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
-            <i class="fas fa-sign-out-alt flex-shrink-0"></i>
-            <span class="font-medium sidebar-text">Logout</span>
         </a>
     </nav>
 </div>
+

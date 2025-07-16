@@ -4,19 +4,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
-?>
-<h2>Ajukan Izin Nugas</h2>
-<?php
+
 require_once '../../includes/db_config.php';
-echo '<pre style="color:blue">Debug: id user dari session = ' . htmlspecialchars($_SESSION['user_id']) . "\n";
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$result = $conn->query('SELECT id FROM anggota');
-echo "id anggota di database: ";
-while ($row = $result->fetch_assoc()) {
-    echo $row['id'] . ' ';
-}
-echo "</pre>";
-$result->close();
+
+$message = '';
+$message_type = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tanggal = $_POST['tanggal'] ?? '';
     $jam_izin = $_POST['jam_izin'] ?? '';
@@ -24,32 +18,187 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $alasan = $_POST['alasan'] ?? '';
     $status = 'Menunggu';
     $id_anggota = $_SESSION['user_id'];
+
     // Validasi: cek apakah id user ada di anggota
-    $result = $conn->query('SELECT id FROM anggota');
-    $anggota_ids = array();
-    while ($row = $result->fetch_assoc()) {
-        $anggota_ids[] = $row['id'];
-    }
-    $result->close();
-    if (in_array($id_anggota, $anggota_ids)) {
-        $stmt = $conn->prepare('INSERT INTO izin_nugas (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan, status) VALUES (?, ?, ?, ?, ?, ?)');
+    $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . $id_anggota); // Direct query for check
+    if ($result_anggota->num_rows > 0) {
+        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan, status) VALUES (?, ?, ?, ?, ?, ?)');
         $stmt->bind_param('isssss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan, $status);
         if ($stmt->execute()) {
-            echo '<p style="color:green">Pengajuan izin nugas berhasil dikirim!</p>';
+            $message = 'Pengajuan izin malam berhasil dikirim!';
+            $message_type = 'success';
         } else {
-            echo '<p style="color:red">Gagal mengajukan izin nugas. Pastikan akun Anda terdaftar sebagai anggota.</p>';
+            $message = 'Gagal mengajukan izin malam. Pastikan akun Anda terdaftar sebagai anggota.';
+            $message_type = 'error';
         }
         $stmt->close();
     } else {
-        echo '<p style="color:red">Akun Anda belum terdaftar sebagai anggota. Hubungi admin untuk pendaftaran.</p>';
+        $message = 'Akun Anda belum terdaftar sebagai anggota. Hubungi admin untuk pendaftaran.';
+        $message_type = 'error';
     }
-    $conn->close();
+    $result_anggota->close();
 }
+$conn->close();
 ?>
-<form method="post">
-    <input type="date" name="tanggal" required><br>
-    <input type="time" name="jam_izin" required placeholder="Jam Izin"><br>
-    <input type="time" name="jam_selesai_izin" required placeholder="Jam Kembali"><br>
-    <input type="text" name="alasan" placeholder="Alasan" required><br>
-    <button type="submit">Ajukan</button>
-</form>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ajukan Izin Malam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary { background-color: #4F46E5; color: white; border: none; }
+        .btn-primary:hover { background-color: #4338CA; }
+        .btn-secondary { background-color: #6B7280; color: white; border: none; }
+        .btn-secondary:hover { background-color: #4B5563; }
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden ">
+        <div class="flex h-screen">
+            <?php include '../sidebar.php'; ?>
+
+            <div class="flex-1 p-2">
+                <header class="bg-white border-b border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
+                                <i class="fas fa-bars text-xl"></i>
+                            </button>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800">Ajukan Izin Malam</h1>
+                                <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="p-6">
+                    <?php if ($message): ?>
+                        <div class="message <?php echo $message_type; ?>"><?php echo $message; ?></div>
+                    <?php endif; ?>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+                        <form method="post">
+                            <div class="form-group">
+                                <label for="tanggal">Tanggal</label>
+                                <input type="date" id="tanggal" name="tanggal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="jam_izin">Jam Izin</label>
+                                <input type="time" id="jam_izin" name="jam_izin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="jam_selesai_izin">Jam Kembali</label>
+                                <input type="time" id="jam_selesai_izin" name="jam_selesai_izin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="alasan">Alasan</label>
+                                <input type="text" id="alasan" name="alasan" placeholder="Alasan" required>
+                            </div>
+                            <div class="flex space-x-4 mt-6">
+                                <button type="submit" class="btn btn-primary">Ajukan</button>
+                                <a href="izin-malam.php" class="btn btn-secondary flex items-center justify-center">Kembali</a>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Sidebar toggle logic (same as dashboard.php)
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
+        const sidebarLogoText = document.querySelector('.sidebar-logo-text');
+        const sidebarLogoIcon = document.querySelector('.sidebar-logo-icon');
+        const sidebarNavItems = document.querySelectorAll('.sidebar-nav-item');
+        const sidebarCreateButton = document.querySelector('.sidebar-create-button');
+        const sidebarUpgradeSection = document.querySelector('.sidebar-upgrade-section');
+
+        let isSidebarOpen = true;
+
+        sidebarToggle.addEventListener('click', () => {
+            if (isSidebarOpen) {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20', 'collapsed');
+
+                sidebarTexts.forEach(text => { text.classList.add('opacity-0', 'pointer-events-none'); });
+                if (sidebarLogoText) sidebarLogoText.classList.add('opacity-0', 'pointer-events-none');
+                if (sidebarUpgradeSection) sidebarUpgradeSection.classList.add('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
+
+                if (sidebarLogoIcon) {
+                    sidebarLogoIcon.classList.remove('space-x-2');
+                    sidebarLogoIcon.classList.add('mx-auto');
+                }
+                sidebarNavItems.forEach(item => {
+                    item.classList.remove('space-x-3', 'px-4');
+                    item.classList.add('justify-center', 'px-0');
+                });
+                if (sidebarCreateButton) {
+                    sidebarCreateButton.classList.remove('space-x-2');
+                    sidebarCreateButton.classList.add('justify-center');
+                    if (sidebarCreateButton.querySelector('button')) {
+                        sidebarCreateButton.querySelector('button').classList.remove('space-x-2');
+                        sidebarCreateButton.querySelector('button').classList.add('justify-center');
+                    }
+                }
+
+                sidebarToggle.querySelector('i').classList.replace('fa-bars', 'fa-arrow-right');
+
+            } else {
+                sidebar.classList.remove('w-20', 'collapsed');
+                sidebar.classList.add('w-64');
+
+                sidebarTexts.forEach(text => { text.classList.remove('opacity-0', 'pointer-events-none'); });
+                if (sidebarLogoText) sidebarLogoText.classList.remove('opacity-0', 'pointer-events-none');
+                if (sidebarUpgradeSection) sidebarUpgradeSection.classList.remove('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
+
+                if (sidebarLogoIcon) {
+                    sidebarLogoIcon.classList.remove('mx-auto');
+                    sidebarLogoIcon.classList.add('space-x-2');
+                }
+                sidebarNavItems.forEach(item => {
+                    item.classList.remove('justify-center', 'px-0');
+                    item.classList.add('space-x-3', 'px-4');
+                });
+                if (sidebarCreateButton) {
+                    sidebarCreateButton.classList.remove('justify-center');
+                    sidebarCreateButton.classList.add('space-x-2');
+                    if (sidebarCreateButton.querySelector('button')) {
+                        sidebarCreateButton.querySelector('button').classList.remove('justify-center');
+                        sidebarCreateButton.querySelector('button').classList.add('space-x-2');
+                    }
+                }
+
+                sidebarToggle.querySelector('i').classList.replace('fa-arrow-right', 'fa-bars');
+            }
+            isSidebarOpen = !isSidebarOpen;
+        });
+    </script>
+</body>
+</html>

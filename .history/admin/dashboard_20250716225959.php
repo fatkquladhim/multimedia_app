@@ -84,85 +84,53 @@ $conn->close();
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="dashboard.php" class="flex items-center justify-center py-3 text-orange-500 bg-orange-50 border-r-3 border-orange-500 sidebar-nav-item">
-                        <i class="fas fa-tachometer-alt w-5 h-5 mr-3 transition-all duration-300"></i>
-                        <span class="font-medium opacity-100 transition-opacity duration-300">Dashboard</span>
+                    <a href="#" class="flex items-center justify-center py-3 text-orange-500 bg-orange-50 border-r-3 border-orange-500 sidebar-nav-item">
+                        <i class="fas fa-home w-5 h-5 mr-3 transition-all duration-300"></i>
+                        <span class="font-medium opacity-100 transition-opacity duration-300">Overview</span>
                     </a>
                     
-                    <a href="anggota/anggota.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-book w-5 h-5 mr-3"></i>
+                        <span class="font-medium">E-Book</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-heart w-5 h-5 mr-3"></i>
+                        <span class="font-medium">My Courses</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-shopping-cart w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Purchase Course</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-check-circle w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Completed Courses</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                         <i class="fas fa-users w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Manajemen Anggota</span>
-                    </a>
-                    
-                    <a href="daftar alat/daftar-alat.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-tools w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Manajemen Alat</span>
-                    </a>
-                    
-                    <a href="peminjaman/peminjaman-barang.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-handshake w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Peminjaman Barang</span>
-                    </a>
-                    
-                    <a href="penyewaan/penyewaan-barang.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-cash-register w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Penyewaan Barang</span>
-                    </a>
-
-                    <a href="legalisasi laptop/legalisasi_list.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-laptop w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Legalisasi Laptop</span>
+                        <span class="font-medium">Community</span>
                     </a>
                 </div>
                 
                 <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Tugas & Izin
+                    Setting
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="beri tugas/beri_tugas_form.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-clipboard-list w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Beri Tugas</span>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-user w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Profile</span>
                     </a>
                     
-                    <a href="beri tugas/tugas_selesai_riwayat.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-check-double w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Riwayat Tugas</span>
-                    </a>
-
-                    <a href="izin_malam/izin-malam.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-moon w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Izin Malam</span>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-cog w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Setting</span>
                     </a>
                     
-                    <a href="izin_nugas/izin-nugas.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-book-open w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Izin Nugas</span>
-                    </a>
-                </div>
-
-                <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Keuangan
-                </div>
-                
-                <div class="space-y-2">
-                    <a href="uang masuk/masuk.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-money-bill-alt w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Uang Masuk</span>
-                    </a>
-                    
-                    <a href="uang keluar/keluar.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-money-bill-wave w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Uang Keluar</span>
-                    </a>
-                </div>
-
-                <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Akun
-                </div>
-                
-                <div class="space-y-2">
-                    <a href="../auth/logout.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                         <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
                         <span class="font-medium">Logout</span>
                     </a>
@@ -204,7 +172,7 @@ $conn->close();
             <main class="flex-1 p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Tugas User Review</h2>
-                    <a href="beri tugas/tugas_selesai_riwayat.php" class="text-orange-500 hover:text-orange-600 font-medium">View All</a>
+                    <a href="beri tugas/tugas_user_review.php" class="text-orange-500 hover:text-orange-600 font-medium">View All</a>
                 </div>
 
                 <!-- Tugas User Review Cards -->
@@ -221,7 +189,7 @@ $conn->close();
                                 <div class="text-sm text-gray-600 mb-2">Status: Menunggu Review</div>
                                 <div class="flex items-center justify-between">
                                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">
-                                       <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo $row['id']; ?>">Nilai Tugas</a>
+                                       <a href="beri tugas/tugas_user_review.php?task_id=<?php echo $row['id']; ?>">Nilai Tugas</a>
                                    </button> 
                                 </div>
                             </div>

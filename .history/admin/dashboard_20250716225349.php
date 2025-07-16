@@ -15,37 +15,30 @@ $izin_malam_count = $conn->query("SELECT COUNT(*) FROM izin_malam")->fetch_row()
 $izin_nugas_count = $conn->query("SELECT COUNT(*) FROM izin_nugas")->fetch_row()[0];
 
 // Fetch data for "Tugas User Review"
-$tugas_review_query = "SELECT t.id, t.judul AS nama_tugas, t.deskripsi, u.username 
+// Assuming 'tugas' table has 'status' and 'user_id' and 'nama_tugas'
+// And 'users' table has 'username'
+$tugas_review_query = "SELECT t.id, t.nama_tugas, t.deskripsi, u.username 
                        FROM tugas t 
-                       JOIN users u ON t.id_penerima_tugas = u.id 
+                       JOIN users u ON t.user_id = u.id 
                        WHERE t.status = 'pending_review' LIMIT 3"; // Fetch up to 3 tasks for review
 $tugas_reviews = $conn->query($tugas_review_query);
 
-// Check for errors
-if (!$tugas_reviews) {
-    die("Database query failed: " . $conn->error);
-}
-
 // Fetch data for "Anggota yang Izin Malam"
-$izin_malam_query = "SELECT a.nama, im.tanggal, im.jam_izin, im.jam_selesai_izin 
+// Assuming 'izin_malam' table has 'anggota_id', 'tanggal_mulai', 'tanggal_selesai', 'status'
+// And 'anggota' table has 'nama'
+$izin_malam_query = "SELECT a.nama, im.tanggal_mulai, im.tanggal_selesai 
                      FROM izin_malam im 
-                     JOIN anggota a ON im.id_anggota = a.id 
-                     WHERE im.status = 'approved' AND im.tanggal >= CURDATE() LIMIT 4"; // Fetch up to 4 active night permits
+                     JOIN anggota a ON im.anggota_id = a.id 
+                     WHERE im.status = 'approved' AND im.tanggal_selesai >= CURDATE() LIMIT 4"; // Fetch up to 4 active night permits
 $izin_malam_anggota = $conn->query($izin_malam_query);
 
-// Check for errors
-if (!$izin_malam_anggota) {
-    die("Database query failed: " . $conn->error);
-}
-
 // Fetch data for "Anggota Teratas"
-$top_anggota_query = "SELECT id, nama FROM anggota ORDER BY id DESC LIMIT 4"; // Example: just fetch latest 4 members
+// This is a placeholder. You'd need a more complex query to determine "top" members.
+// For example, by counting completed tasks, or some other metric.
+// Here, I'll just fetch some members.
+$top_anggota_query = "SELECT id, nama, divisi FROM anggota ORDER BY id DESC LIMIT 4"; // Example: just fetch latest 4 members
 $top_anggota = $conn->query($top_anggota_query);
 
-// Check for errors
-if (!$top_anggota) {
-    die("Database query failed: " . $conn->error);
-}
 
 $conn->close();
 ?>
@@ -84,85 +77,53 @@ $conn->close();
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="dashboard.php" class="flex items-center justify-center py-3 text-orange-500 bg-orange-50 border-r-3 border-orange-500 sidebar-nav-item">
-                        <i class="fas fa-tachometer-alt w-5 h-5 mr-3 transition-all duration-300"></i>
-                        <span class="font-medium opacity-100 transition-opacity duration-300">Dashboard</span>
+                    <a href="#" class="flex items-center justify-center py-3 text-orange-500 bg-orange-50 border-r-3 border-orange-500 sidebar-nav-item">
+                        <i class="fas fa-home w-5 h-5 mr-3 transition-all duration-300"></i>
+                        <span class="font-medium opacity-100 transition-opacity duration-300">Overview</span>
                     </a>
                     
-                    <a href="anggota/anggota.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-book w-5 h-5 mr-3"></i>
+                        <span class="font-medium">E-Book</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-heart w-5 h-5 mr-3"></i>
+                        <span class="font-medium">My Courses</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-shopping-cart w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Purchase Course</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-check-circle w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Completed Courses</span>
+                    </a>
+                    
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                         <i class="fas fa-users w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Manajemen Anggota</span>
-                    </a>
-                    
-                    <a href="daftar alat/daftar-alat.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-tools w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Manajemen Alat</span>
-                    </a>
-                    
-                    <a href="peminjaman/peminjaman-barang.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-handshake w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Peminjaman Barang</span>
-                    </a>
-                    
-                    <a href="penyewaan/penyewaan-barang.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-cash-register w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Penyewaan Barang</span>
-                    </a>
-
-                    <a href="legalisasi laptop/legalisasi_list.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-laptop w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Legalisasi Laptop</span>
+                        <span class="font-medium">Community</span>
                     </a>
                 </div>
                 
                 <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Tugas & Izin
+                    Setting
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="beri tugas/beri_tugas_form.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-clipboard-list w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Beri Tugas</span>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-user w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Profile</span>
                     </a>
                     
-                    <a href="beri tugas/tugas_selesai_riwayat.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-check-double w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Riwayat Tugas</span>
-                    </a>
-
-                    <a href="izin_malam/izin-malam.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-moon w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Izin Malam</span>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                        <i class="fas fa-cog w-5 h-5 mr-3"></i>
+                        <span class="font-medium">Setting</span>
                     </a>
                     
-                    <a href="izin_nugas/izin-nugas.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-book-open w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Izin Nugas</span>
-                    </a>
-                </div>
-
-                <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Keuangan
-                </div>
-                
-                <div class="space-y-2">
-                    <a href="uang masuk/masuk.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-money-bill-alt w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Uang Masuk</span>
-                    </a>
-                    
-                    <a href="uang keluar/keluar.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
-                        <i class="fas fa-money-bill-wave w-5 h-5 mr-3"></i>
-                        <span class="font-medium">Uang Keluar</span>
-                    </a>
-                </div>
-
-                <div class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">
-                    Akun
-                </div>
-                
-                <div class="space-y-2">
-                    <a href="../auth/logout.php" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                         <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
                         <span class="font-medium">Logout</span>
                     </a>
@@ -204,7 +165,7 @@ $conn->close();
             <main class="flex-1 p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Tugas User Review</h2>
-                    <a href="beri tugas/tugas_selesai_riwayat.php" class="text-orange-500 hover:text-orange-600 font-medium">View All</a>
+                    <a href="beri tugas/tugas_user_review.php" class="text-orange-500 hover:text-orange-600 font-medium">View All</a>
                 </div>
 
                 <!-- Tugas User Review Cards -->
@@ -221,7 +182,7 @@ $conn->close();
                                 <div class="text-sm text-gray-600 mb-2">Status: Menunggu Review</div>
                                 <div class="flex items-center justify-between">
                                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">
-                                       <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo $row['id']; ?>">Nilai Tugas</a>
+                                       <a href="beri tugas/tugas_user_review.php?task_id=<?php echo $row['id']; ?>">Nilai Tugas</a>
                                    </button> 
                                 </div>
                             </div>
@@ -246,7 +207,7 @@ $conn->close();
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold text-gray-800"><?php echo htmlspecialchars($row['nama']); ?></h4>
-                                                <p class="text-sm text-gray-600">Izin: <?php echo htmlspecialchars($row['tanggal']); ?>, <?php echo htmlspecialchars($row['jam_izin']); ?> s/d <?php echo htmlspecialchars($row['jam_selesai_izin']); ?></p>
+                                                <p class="text-sm text-gray-600">Izin: <?php echo htmlspecialchars($row['tanggal_mulai']); ?> s/d <?php echo htmlspecialchars($row['tanggal_selesai']); ?></p>
                                             </div>
                                         </div>
                                     </div>
@@ -273,7 +234,13 @@ $conn->close();
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold text-gray-800"><?php echo htmlspecialchars($row['nama']); ?></h4>
+                                                <p class="text-sm text-gray-600"><?php echo htmlspecialchars($row['divisi']); ?></p>
                                             </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <!-- You can add dynamic stats here, e.g., completed tasks -->
+                                            <p class="text-sm font-medium text-gray-800">ID: <?php echo htmlspecialchars($row['id']); ?></p>
+                                            <p class="text-sm text-gray-600">Status: Aktif</p>
                                         </div>
                                         <div class="flex items-center space-x-2">
                                             <button class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600">Detail</button>
@@ -335,6 +302,14 @@ $conn->close();
             }
             isSidebarOpen = !isSidebarOpen; // Toggle the state
         });
+
+        // Optional: Add a default state for smaller screens or initial load
+        // You might want the sidebar to be closed by default on mobile
+        // window.addEventListener('DOMContentLoaded', () => {
+        //     if (window.innerWidth < 768) { // Example breakpoint for mobile
+        //         sidebarToggle.click(); // Simulate a click to close it
+        //     }
+        // });
     </script>
 </body>
 </html>
