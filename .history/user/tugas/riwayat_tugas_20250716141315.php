@@ -53,7 +53,7 @@ $result = $stmt->get_result();
             <?php include '../sidebar.php'; ?>
 
             <!-- Main Content -->
-            <div class="flex-1 p-2">
+            
                 <header class="bg-white border-b border-gray-200 p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
@@ -86,7 +86,7 @@ $result = $stmt->get_result();
                         </div>
                     </div>
                 </header>
-
+<div class="flex-1 p-6">
                 <!-- Konten Dashboard -->
                 <h2 class="text-xl font-bold mt-4">Riwayat Tugas</h2>
                 <p><a href="tugas_user.php">Kembali ke Tugas Saya</a></p>

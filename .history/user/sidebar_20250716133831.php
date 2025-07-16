@@ -1,36 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
-    header('Location: ../auth/login.php');
-    exit;
-}
-
-require_once '../includes/db_config.php';
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$id_user = $_SESSION['user_id'];
-
-// Ambil tugas yang diberikan ke user yang statusnya 'pending' atau 'selesai' (jika belum dinilai)
-// Join dengan tugas_jawaban untuk mengecek apakah sudah ada jawaban
-$stmt = $conn->prepare('
-    SELECT
-        t.id,
-        t.judul,
-        t.deskripsi,
-        t.deadline,
-        t.status,
-        tj.id as jawaban_id,
-        tj.file_jawaban,
-        tj.nilai,
-        tj.komentar
-    FROM tugas t
-    LEFT JOIN tugas_jawaban tj ON t.id = tj.id_tugas AND tj.id_user = ?
-    WHERE t.id_penerima_tugas = ? AND t.status IN ("pending", "selesai")
-    ORDER BY t.deadline ASC
-');
-$stmt->bind_param('ii', $id_user, $id_user);
-$stmt->execute();
-$result = $stmt->get_result();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,6 +84,15 @@ $result = $stmt->get_result();
                     <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0 sidebar-logo-icon">
                         <span class="text-white font-bold text-sm">P</span>
                     </div>
+                    <span class="text-xl font-bold text-gray-800 sidebar-logo-text">Pitch.io</span>
+                </div>
+
+                <!-- Create New Pitch Button -->
+                <div class="mb-8 sidebar-create-button">
+                    <button class="w-full bg-purple-600 text-white rounded-lg p-3 flex items-center justify-center space-x-2 hover:bg-purple-700 transition-colors">
+                        <i class="fas fa-plus flex-shrink-0"></i>
+                        <span class="font-medium sidebar-text">Create New Pitch</span>
+                    </button>
                 </div>
 
                 <!-- Navigation -->
@@ -185,156 +161,7 @@ $result = $stmt->get_result();
                 </header>
 
                 <!-- Dashboard Content -->
-                <main class="flex-1 p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Tugas Masuk</h2>
-                     <?php
-    if (isset($_GET['status'])) {
-        if ($_GET['status'] == 'success') {
-            echo '<div class="message success">' . htmlspecialchars($_GET['message']) . '</div>';
-        } else {
-            echo '<div class="message error">' . htmlspecialchars($_GET['message']) . '</div>';
-        }
-    }
-    ?>
-                    <button class="text-orange-500 hover:text-orange-600 font-medium">View All</button>
-                </div>
-
-                <!-- Task Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <?php
-            if ($result->num_rows > 0):
-                while ($row = $result->fetch_assoc()):
-                    // Determine card color based on task status or type (optional)
-                    $card_bg_color = 'bg-purple-50';
-                    $icon_bg_color = 'bg-purple-100';
-                    $icon_color = 'text-purple-600';
-                    $title_color = 'text-purple-700';
-                    $action_color = 'text-purple-700';
-                    $progress_color = 'bg-purple-600';
-                    $icon_class = 'fas fa-tasks'; // Default task icon
-
-                    // You can add logic here to change colors/icons based on $row['status'] or other criteria
-                    if ($row['status'] == 'selesai' && $row['jawaban_id']) {
-                        // Task submitted, waiting for grading
-                        $card_bg_color = 'bg-orange-50';
-                        $icon_bg_color = 'bg-orange-100';
-                        $icon_color = 'text-orange-600';
-                        $title_color = 'text-orange-700';
-                        $action_color = 'text-orange-700';
-                        $progress_color = 'bg-orange-600';
-                        $icon_class = 'fas fa-hourglass-half';
-                    } elseif ($row['status'] == 'diperiksa' && $row['jawaban_id']) {
-                        // Task graded
-                        $card_bg_color = 'bg-blue-50';
-                        $icon_bg_color = 'bg-blue-100';
-                        $icon_color = 'text-blue-600';
-                        $title_color = 'text-blue-700';
-                        $action_color = 'text-blue-700';
-                        $progress_color = 'bg-blue-600';
-                        $icon_class = 'fas fa-check-circle';
-                    }
-            ?>
-                    <div class="<?= $card_bg_color ?> rounded-2xl p-6 relative overflow-hidden">
-                        <div class="absolute top-4 right-4 w-8 h-8 <?= $icon_bg_color ?> rounded-lg flex items-center justify-center">
-                            <i class="<?= $icon_class ?> <?= $icon_color ?>"></i>
-                        </div>
-                        <div class="text-sm text-gray-600 mb-2">Deadline: <?php echo date('d/m/Y', strtotime($row['deadline'])); ?></div>
-                        <h3 class="text-xl font-bold <?= $title_color ?> mb-2"><?php echo htmlspecialchars($row['judul']); ?></h3>
-                        <p class="text-gray-700 mb-4"><?php echo nl2br(htmlspecialchars($row['deskripsi'])); ?></p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-gray-700">Status:
-                                <?php
-                                    if ($row['jawaban_id'] && $row['status'] == 'selesai') {
-                                        echo 'Menunggu Penilaian'; // User submitted, admin hasn't graded
-                                    } elseif ($row['jawaban_id'] && $row['status'] == 'diperiksa') {
-                                        echo 'Sudah Dinilai'; // Admin has graded
-                                    } else {
-                                        echo htmlspecialchars($row['status']); // Pending
-                                    }
-                                ?>
-                            </span>
-                            <span class="text-sm font-bold <?= $action_color ?>">
-                                <?php if (!$row['jawaban_id']): // If no answer submitted yet ?>
-                                    <a href="./tugas/tugas_kerjakan.php?id=<?php echo $row['id']; ?>">Kerjakan</a>
-                                <?php else: // If answer already submitted ?>
-                                    Sudah dikerjakan
-                                <?php endif; ?>
-                            </span>
-                        </div>
-                        <!-- Removed static progress bar as it's not directly applicable to task status without a specific metric -->
-                        <!-- <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                            <div class="<?= $progress_color ?> h-2 rounded-full" style="width: 20%"></div>
-                        </div> -->
-                    </div>
-                    <?php
-                endwhile;
-            else:
-            ?>
-                <div class="col-span-full text-center text-gray-600 py-8">
-                    Tidak ada tugas yang tersedia saat ini.
-                </div>
-            <?php
-            endif;
-            ?>
-                </div>
-
-                <!-- Bottom Section (Popular Categories and Top Mentors remain unchanged as per original context) -->
-                 <div class="space-y-4">
-                        <!-- Next in Fashion -->
-                        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-20 h-20 bg-yellow-400 rounded-xl flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-tshirt text-white text-2xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="text-lg font-semibold text-gray-800">Izin malam hari ini</h4>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-gray-600">Private</span>
-                                            <div class="w-3 h-3 bg-purple-600 rounded-full"></div>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-gray-600 hover:text-gray-800">
-                                                <a href="./izin malam/izin-malam-entry.php">izin sekarang</a>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Digital Marketing Today -->
-                        <div class="bg-white rounded-2xl p-6 border border-gray-200 card-shadow">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-chart-bar text-white text-2xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="text-lg font-semibold text-gray-800">Izin malam hari ini</h4>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-gray-600">Private</span>
-                                            <div class="w-3 h-3 bg-purple-600 rounded-full"></div>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-600 text-sm mb-2">nikmati kemudahan izin malam di multimedia annur 2</p>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700"></span>
-                                        <div class="flex items-center space-x-2">
-                                            <button class="p-2 text-gray-600 hover:text-gray-800">
-                                                <a href="./izin nugas/izin-nugas-entry.php">izin sekarang</a>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-            </main>
+                
             </div>
         </div>
     </div>

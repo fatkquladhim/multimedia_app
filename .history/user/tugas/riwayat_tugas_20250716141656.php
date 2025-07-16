@@ -53,7 +53,7 @@ $result = $stmt->get_result();
             <?php include '../sidebar.php'; ?>
 
             <!-- Main Content -->
-            <div class="flex-1 p-2">
+            <div class="flex-1">
                 <header class="bg-white border-b border-gray-200 p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">

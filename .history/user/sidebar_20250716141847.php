@@ -1,7 +1,10 @@
 <div id="sidebar" class="w-64 bg-gray-50 border-r border-gray-200 p-6 flex flex-col sidebar">
     <!-- Logo -->
-    <div class="flex items-center space-x-2 mb-8" style="text-align: center;">
-           <img src="../../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
+    <div class="flex items-center space-x-2 mb-8">
+        <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0 sidebar-logo-icon">
+           <img src="../public/assets/imgs/rev-removebg-preview.png">
+        </div>
+       
     </div>
 
     <!-- Navigation -->
