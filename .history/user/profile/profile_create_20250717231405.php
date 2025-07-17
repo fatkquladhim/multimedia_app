@@ -4,7 +4,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
+
+require_once '../../includes/db_config.php';
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+$id_user = $_SESSION['user_id'];
+$action = $_GET['action'] ?? 'create'; // 'create' or 'edit'
+
+$nama_lengkap = '';
+$email = '';
+$alamat = '';
+$no_hp = '';
+$current_foto = '';
+
+if ($action === 'edit') {
+    $stmt = $conn->prepare('SELECT nama_lengkap, email, alamat, no_hp, foto FROM profile WHERE id_user = ?');
+    $stmt->bind_param('i', $id_user);
+    $stmt->execute();
+    $stmt->bind_result($nama_lengkap, $email, $alamat, $no_hp, $current_foto);
+    $stmt->fetch();
+    $stmt->close();
+}
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,12 +127,27 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                 <header class="bg-white border-b border-gray-200 p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
+                            <!-- Sidebar Toggle Button -->
                             <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
                                 <i class="fas fa-bars text-xl"></i>
                             </button>
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-800">Edit Profil</h1>
+                                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
                                 <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-10 bg-white-600 rounded-full flex items-center justify-center overflow-hidden">
+                                    <img src="../../uploads/profiles/<?php echo $profile_photo; ?>" alt="Profile Photo" class="w-full h-full object-cover rounded-full">
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <a href="../profile/profile_view.php">
+                                        <span class="font-medium text-gray-800"><?php echo $profile_name; ?></span>
+                                        <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,26 +160,29 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 
                             <div class="form-group">
                                 <label for="nama_lengkap">Nama Lengkap</label>
-                                <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap"  required>
+                                <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" placeholder="Email" required>
+                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="alamat">Alamat</label>
-                                <input type="text" id="alamat" name="alamat" placeholder="Alamat">
+                                <input type="text" id="alamat" name="alamat" placeholder="Alamat" value="<?php echo htmlspecialchars($alamat); ?>">
                             </div>
                             <div class="form-group">
                                 <label for="no_hp">No HP</label>
-                                <input type="text" id="no_hp" name="no_hp" placeholder="No HP" >
+                                <input type="text" id="no_hp" name="no_hp" placeholder="No HP" value="<?php echo htmlspecialchars($no_hp); ?>">
                             </div>
                             <div class="form-group">
                                 <label for="foto">Foto Profil</label>
                                 <input type="file" id="foto" name="foto" accept="image/*">
+                                <?php if ($current_foto): ?>
+                                    <p class="text-sm text-gray-600 mt-2">Foto saat ini: <img src="../../uploads/profiles/<?php echo htmlspecialchars($current_foto); ?>" alt="Current Photo" class="w-20 h-20 object-cover rounded-full inline-block ml-2"></p>
+                                <?php endif; ?>
                             </div>
                             <div class="flex space-x-4 mt-6">
-                                <button type="submit" class="btn btn-primary">simpan</button>
+                                <button type="submit" class="btn btn-primary"><?php echo ($action === 'edit' ? 'Update' : 'Simpan'); ?></button>
                                 <a href="profile_view.php" class="btn btn-secondary flex items-center justify-center">Batal</a>
                             </div>
                         </form>

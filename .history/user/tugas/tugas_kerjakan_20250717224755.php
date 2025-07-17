@@ -4,19 +4,63 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
+require_once '../../includes/db_config.php';
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$id_user = $_SESSION['user_id'];
+$id_tugas = $_GET['id'] ?? null;
+
+if (!$id_tugas) {
+    header('Location: tugas_user.php?status=error&message=ID tugas tidak valid.');
+    exit;
+}
+
+$stmt = $conn->prepare('
+    SELECT
+        t.id,
+        t.judul,
+        t.deskripsi,
+        t.deadline,
+        t.status,
+        tj.id as jawaban_id,
+        tj.file_jawaban
+    FROM tugas t
+    LEFT JOIN tugas_jawaban tj ON t.id = tj.id_tugas AND tj.id_user = ?
+    WHERE t.id = ? AND t.id_penerima_tugas = ?
+');
+$stmt->bind_param('iii', $id_user, $id_tugas, $id_user);
+$stmt->execute();
+$result = $stmt->get_result();
+$tugas = $result->fetch_assoc();
+$stmt->close();
+
+if (!$tugas) {
+    header('Location: tugas_user.php?status=error&message=Tugas tidak ditemukan atau bukan tugas Anda.');
+    exit;
+}
+
+if ($tugas['jawaban_id']) {
+    header('Location: tugas_user.php?status=info&message=Tugas ini sudah Anda kerjakan.');
+    exit;
+}
+
+if (strtotime($tugas['deadline']) < strtotime(date('Y-m-d'))) {
+    header('Location: tugas_user.php?status=error&message=Tugas ini sudah melewati deadline.');
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo ($action === 'edit' ? 'Edit' : 'Buat'); ?> Profil</title>
+    <title>Kerjakan Tugas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
+        .task-details { background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .task-details strong { display: inline-block; width: 100px; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        .form-group input[type="text"],
-        .form-group input[type="email"],
         .form-group input[type="file"] {
             width: 100%;
             padding: 0.75rem;
@@ -24,7 +68,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
             border-radius: 0.375rem;
             box-sizing: border-box;
         }
-        .form-group input[type="file"] { padding: 0.5rem; }
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.375rem;
@@ -32,10 +75,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        .btn-primary { background-color: #4F46E5; color: white; border: none; }
-        .btn-primary:hover { background-color: #4338CA; }
+        .btn-primary { background-color: #28a745; color: white; border: none; }
+        .btn-primary:hover { background-color: #218838; }
         .btn-secondary { background-color: #6B7280; color: white; border: none; }
         .btn-secondary:hover { background-color: #4B5563; }
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .sidebar {
             transition: width 0.3s ease-in-out;
         }
@@ -108,7 +154,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                                 <i class="fas fa-bars text-xl"></i>
                             </button>
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-800">Edit Profil</h1>
                                 <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
                             </div>
                         </div>
@@ -116,33 +161,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                 </header>
 
                 <main class="p-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
-                        <form method="post" action="profile_store.php" enctype="multipart/form-data">
-                            <input type="hidden" name="action" value="<?php echo $action; ?>">
+                    <?php   
+                    if (isset($_GET['status'])) {
+                        echo '<div class="message ' . htmlspecialchars($_GET['status']) . '">' . htmlspecialchars($_GET['message']) . '</div>';
+                    }
+                    ?>
 
+                    <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+                        <h2 class="text-xl font-bold mb-4">Detail Tugas</h2>
+                        <div class="task-details mb-6">
+                            <p class="mb-2"><strong class="text-gray-700">Judul:</strong> <?php echo htmlspecialchars($tugas['judul']); ?></p>
+                            <p class="mb-2"><strong class="text-gray-700">Deskripsi:</strong> <?php echo nl2br(htmlspecialchars($tugas['deskripsi'])); ?></p>
+                            <p class="mb-2"><strong class="text-gray-700">Deadline:</strong> <?php echo date('d/m/Y', strtotime($tugas['deadline'])); ?></p>
+                        </div>
+
+                        <form method="post" action="tugas_kirim_store.php" enctype="multipart/form-data">
+                            <input type="hidden" name="id_tugas" value="<?php echo $id_tugas; ?>">
                             <div class="form-group">
-                                <label for="nama_lengkap">Nama Lengkap</label>
-                                <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap"  required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" placeholder="Email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="alamat">Alamat</label>
-                                <input type="text" id="alamat" name="alamat" placeholder="Alamat">
-                            </div>
-                            <div class="form-group">
-                                <label for="no_hp">No HP</label>
-                                <input type="text" id="no_hp" name="no_hp" placeholder="No HP" >
-                            </div>
-                            <div class="form-group">
-                                <label for="foto">Foto Profil</label>
-                                <input type="file" id="foto" name="foto" accept="image/*">
+                                <label for="file_jawaban">Upload File Jawaban (PDF/JPG/PNG, Max 5MB):</label>
+                                <input type="file" id="file_jawaban" name="file_jawaban" accept="application/pdf,image/jpeg,image/png" required>
+                                <small class="text-gray-500 mt-1 block">Ukuran file maksimal 5MB.</small>
                             </div>
                             <div class="flex space-x-4 mt-6">
-                                <button type="submit" class="btn btn-primary">simpan</button>
-                                <a href="profile_view.php" class="btn btn-secondary flex items-center justify-center">Batal</a>
+                                <button type="submit" class="btn btn-primary">Kirim Jawaban</button>
+                                <a href="tugas_user.php" class="btn btn-secondary flex items-center justify-center">Kembali ke Tugas Saya</a>
                             </div>
                         </form>
                     </div>
@@ -223,3 +265,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     </script>
 </body>
 </html>
+
+<?php $conn->close(); ?>

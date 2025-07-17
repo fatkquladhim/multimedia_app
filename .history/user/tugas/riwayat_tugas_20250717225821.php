@@ -27,12 +27,21 @@ $stmt = $conn->prepare('
 $stmt->bind_param('i', $id_user);
 $stmt->execute();
 $result = $stmt->get_result();
-
-include '../header_beckend.php';
+// Fetch user profile for display
+$profile_name = "User"; // Default
+$profile_photo = "default_profile.jpg"; // Default
+$stmt_profile = $conn->prepare('SELECT nama_lengkap, foto FROM profile WHERE id_user = ?');
+$stmt_profile->bind_param('i', $id_user);
+$stmt_profile->execute();
+$stmt_profile->bind_result($fetched_name, $fetched_photo);
+if ($stmt_profile->fetch()) {
+    $profile_name = htmlspecialchars($fetched_name);
+    $profile_photo = htmlspecialchars($fetched_photo);
+}
+$stmt_profile->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,37 +49,12 @@ include '../header_beckend.php';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
         .sidebar {
             transition: width 0.3s ease-in-out;
         }
@@ -130,14 +114,40 @@ include '../header_beckend.php';
         }
     </style>
 </head>
-
 <body>
     <div class="bg-white rounded-3xl shadow-2xl overflow-hidden ">
         <div class="flex h-screen">
             <?php include '../sidebar.php'; ?>
 
             <div class="flex-1 p-2">
-                <?php include '../header_frontend.php'; ?>
+                 <header class="bg-white border-b border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <!-- Sidebar Toggle Button -->
+                            <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
+                                <i class="fas fa-bars text-xl"></i>
+                            </button>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+                                <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-10 bg-white-600 rounded-full flex items-center justify-center overflow-hidden">
+                                    <img src="../../uploads/profiles/<?php echo $profile_photo; ?>" alt="Profile Photo" class="w-full h-full object-cover rounded-full">
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <a href="./profile/profile_view.php">
+                                        <span class="font-medium text-gray-800"><?php echo $profile_name; ?></span>
+                                        <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
                 <main class="p-6">
                     <h2 class="text-xl font-bold mb-4">Riwayat Tugas</h2>
@@ -158,30 +168,29 @@ include '../header_beckend.php';
                             <tbody>
                                 <?php if ($result->num_rows > 0): ?>
                                     <?php while ($row = $result->fetch_assoc()): ?>
-                                        <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['judul']); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y', strtotime($row['deadline'])); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y H:i', strtotime($row['tanggal_submit'])); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700">
-                                                <?php if ($row['file_jawaban']): ?>
-                                                    <a href="../../uploads/tugas_jawaban/<?php echo htmlspecialchars($row['file_jawaban']); ?>" target="_blank" class="text-blue-500 hover:underline">Download</a>
-                                                <?php else: echo '-';
-                                                endif; ?>
-                                            </td>
-                                            <td class="py-3 px-4 text-sm text-gray-700">
-                                                <?php
-                                                if ($row['tugas_status'] == 'diperiksa') {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-green-700 bg-green-100 rounded-full">Sudah Dinilai</span>';
-                                                } elseif ($row['tugas_status'] == 'selesai') {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full">Menunggu Penilaian</span>';
-                                                } else {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">' . htmlspecialchars($row['tugas_status']) . '</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo $row['nilai'] !== null ? htmlspecialchars($row['nilai']) : '-'; ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['komentar'] ?? '-'); ?></td>
-                                        </tr>
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['judul']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y', strtotime($row['deadline'])); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y H:i', strtotime($row['tanggal_submit'])); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700">
+                                            <?php if ($row['file_jawaban']): ?>
+                                                <a href="../../uploads/tugas_jawaban/<?php echo htmlspecialchars($row['file_jawaban']); ?>" target="_blank" class="text-blue-500 hover:underline">Download</a>
+                                            <?php else: echo '-'; endif; ?>
+                                        </td>
+                                        <td class="py-3 px-4 text-sm text-gray-700">
+                                            <?php
+                                            if ($row['tugas_status'] == 'diperiksa') {
+                                                echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-green-700 bg-green-100 rounded-full">Sudah Dinilai</span>';
+                                            } elseif ($row['tugas_status'] == 'selesai') {
+                                                echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full">Menunggu Penilaian</span>';
+                                            } else {
+                                                echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">' . htmlspecialchars($row['tugas_status']) . '</span>';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo $row['nilai'] !== null ? htmlspecialchars($row['nilai']) : '-'; ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['komentar'] ?? '-'); ?></td>
+                                    </tr>
                                     <?php endwhile; ?>
                                 <?php else: ?>
                                     <tr>
@@ -213,9 +222,7 @@ include '../header_beckend.php';
                 sidebar.classList.remove('w-64');
                 sidebar.classList.add('w-20', 'collapsed');
 
-                sidebarTexts.forEach(text => {
-                    text.classList.add('opacity-0', 'pointer-events-none');
-                });
+                sidebarTexts.forEach(text => { text.classList.add('opacity-0', 'pointer-events-none'); });
                 if (sidebarLogoText) sidebarLogoText.classList.add('opacity-0', 'pointer-events-none');
                 if (sidebarUpgradeSection) sidebarUpgradeSection.classList.add('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
 
@@ -242,9 +249,7 @@ include '../header_beckend.php';
                 sidebar.classList.remove('w-20', 'collapsed');
                 sidebar.classList.add('w-64');
 
-                sidebarTexts.forEach(text => {
-                    text.classList.remove('opacity-0', 'pointer-events-none');
-                });
+                sidebarTexts.forEach(text => { text.classList.remove('opacity-0', 'pointer-events-none'); });
                 if (sidebarLogoText) sidebarLogoText.classList.remove('opacity-0', 'pointer-events-none');
                 if (sidebarUpgradeSection) sidebarUpgradeSection.classList.remove('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
 
@@ -271,7 +276,6 @@ include '../header_beckend.php';
         });
     </script>
 </body>
-
 </html>
 <?php
 $stmt->close();

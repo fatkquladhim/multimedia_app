@@ -4,27 +4,62 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
+
+require_once '../../includes/db_config.php';
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+$message = '';
+$message_type = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tanggal = $_POST['tanggal'] ?? '';
+    $jam_izin = $_POST['jam_izin'] ?? '';
+    $jam_selesai_izin = $_POST['jam_selesai_izin'] ?? '';
+    $alasan = $_POST['alasan'] ?? '';
+    $status = 'Menunggu';
+    $id_anggota = $_SESSION['user_id'];
+
+    // Validasi: cek apakah id user ada di anggota
+    $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . $id_anggota); // Direct query for check
+    if ($result_anggota->num_rows > 0) {
+        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan, status) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->bind_param('isssss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan, $status);
+        if ($stmt->execute()) {
+            $message = 'Pengajuan izin malam berhasil dikirim!';
+            $message_type = 'success';
+        } else {
+            $message = 'Gagal mengajukan izin malam. Pastikan akun Anda terdaftar sebagai anggota.';
+            $message_type = 'error';
+        }
+        $stmt->close();
+    } else {
+        $message = 'Akun Anda belum terdaftar sebagai anggota. Hubungi admin untuk pendaftaran.';
+        $message_type = 'error';
+    }
+    $result_anggota->close();
+}
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo ($action === 'edit' ? 'Edit' : 'Buat'); ?> Profil</title>
+    <title>Ajukan Izin Malam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="file"] {
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group input[type="text"] {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ccc;
             border-radius: 0.375rem;
             box-sizing: border-box;
         }
-        .form-group input[type="file"] { padding: 0.5rem; }
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.375rem;
@@ -36,6 +71,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
         .btn-primary:hover { background-color: #4338CA; }
         .btn-secondary { background-color: #6B7280; color: white; border: none; }
         .btn-secondary:hover { background-color: #4B5563; }
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .sidebar {
             transition: width 0.3s ease-in-out;
         }
@@ -108,7 +146,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                                 <i class="fas fa-bars text-xl"></i>
                             </button>
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-800">Edit Profil</h1>
+                                <h1 class="text-2xl font-bold text-gray-800">Ajukan Izin Malam</h1>
                                 <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
                             </div>
                         </div>
@@ -116,33 +154,31 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                 </header>
 
                 <main class="p-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
-                        <form method="post" action="profile_store.php" enctype="multipart/form-data">
-                            <input type="hidden" name="action" value="<?php echo $action; ?>">
+                    <?php if ($message): ?>
+                        <div class="message <?php echo $message_type; ?>"><?php echo $message; ?></div>
+                    <?php endif; ?>
 
+                    <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+                        <form method="post">
                             <div class="form-group">
-                                <label for="nama_lengkap">Nama Lengkap</label>
-                                <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap"  required>
+                                <label for="tanggal">Tanggal</label>
+                                <input type="date" id="tanggal" name="tanggal" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" placeholder="Email" required>
+                                <label for="jam_izin">Jam Izin</label>
+                                <input type="time" id="jam_izin" name="jam_izin" required>
                             </div>
                             <div class="form-group">
-                                <label for="alamat">Alamat</label>
-                                <input type="text" id="alamat" name="alamat" placeholder="Alamat">
+                                <label for="jam_selesai_izin">Jam Kembali</label>
+                                <input type="time" id="jam_selesai_izin" name="jam_selesai_izin" required>
                             </div>
                             <div class="form-group">
-                                <label for="no_hp">No HP</label>
-                                <input type="text" id="no_hp" name="no_hp" placeholder="No HP" >
-                            </div>
-                            <div class="form-group">
-                                <label for="foto">Foto Profil</label>
-                                <input type="file" id="foto" name="foto" accept="image/*">
+                                <label for="alasan">Alasan</label>
+                                <input type="text" id="alasan" name="alasan" placeholder="Alasan" required>
                             </div>
                             <div class="flex space-x-4 mt-6">
-                                <button type="submit" class="btn btn-primary">simpan</button>
-                                <a href="profile_view.php" class="btn btn-secondary flex items-center justify-center">Batal</a>
+                                <button type="submit" class="btn btn-primary">Ajukan</button>
+                                <a href="izin-malam.php" class="btn btn-secondary flex items-center justify-center">Kembali</a>
                             </div>
                         </form>
                     </div>

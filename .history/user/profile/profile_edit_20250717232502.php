@@ -141,7 +141,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
                                 <input type="file" id="foto" name="foto" accept="image/*">
                             </div>
                             <div class="flex space-x-4 mt-6">
-                                <button type="submit" class="btn btn-primary">simpan</button>
+                                <button type="submit" class="btn btn-primary"></button>
                                 <a href="profile_view.php" class="btn btn-secondary flex items-center justify-center">Batal</a>
                             </div>
                         </form>

@@ -168,8 +168,8 @@ $stmt_profile->close();
             <div id="sidebar" class="w-64 bg-gray-50 border-r border-gray-200 p-6 flex flex-col sidebar">
                 <!-- Logo -->
                 <div class="flex items-center space-x-2 mb-8" style="text-align: center;">
-                    <img src="../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
-                    <span class="text-xl font-bold text-gray-800 sidebar-logo-text">multimedia</span>
+                    <img src="../../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
+                    <span class="text-xl font-bold text-gray-800 sidebar-logo-text">Pitch.io</span>
                 </div>
 
                 <!-- Navigation -->

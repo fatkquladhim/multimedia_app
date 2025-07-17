@@ -7,70 +7,26 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 
 require_once '../../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$id_user = $_SESSION['user_id'];
-
-$stmt = $conn->prepare('
-    SELECT
-        tj.id,
-        t.judul,
-        t.deadline,
-        tj.file_jawaban,
-        tj.nilai,
-        tj.komentar,
-        tj.tanggal_submit,
-        t.status as tugas_status
-    FROM tugas_jawaban tj
-    JOIN tugas t ON tj.id_tugas = t.id
-    WHERE tj.id_user = ?
-    ORDER BY tj.tanggal_submit DESC
-');
-$stmt->bind_param('i', $id_user);
+$id_anggota = $_SESSION['user_id'];
+$stmt = $conn->prepare('SELECT tanggal, jam_izin, jam_selesai_izin, alasan, status FROM izin_nugas WHERE id_anggota = ? ORDER BY tanggal DESC');
+$stmt->bind_param('i', $id_anggota);
 $stmt->execute();
-$result = $stmt->get_result();
-
-include '../header_beckend.php';
+$izin = $stmt->get_result();
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Tugas</title>
+    <title>Izin Nugas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
         .sidebar {
             transition: width 0.3s ease-in-out;
         }
@@ -130,62 +86,66 @@ include '../header_beckend.php';
         }
     </style>
 </head>
-
 <body>
     <div class="bg-white rounded-3xl shadow-2xl overflow-hidden ">
         <div class="flex h-screen">
             <?php include '../sidebar.php'; ?>
 
             <div class="flex-1 p-2">
-                <?php include '../header_frontend.php'; ?>
+                <header class="bg-white border-b border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
+                                <i class="fas fa-bars text-xl"></i>
+                            </button>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800">Izin Nugas</h1>
+                                <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
                 <main class="p-6">
-                    <h2 class="text-xl font-bold mb-4">Riwayat Tugas</h2>
+                    <h2 class="text-xl font-bold mb-4">Riwayat Izin Nugas</h2>
+                    <p class="mb-4"><a href="izin-nugas-entry.php" class="text-blue-600 hover:underline">Ajukan Izin Nugas</a> | <a href="../dashboard.php" class="text-blue-600 hover:underline">Kembali ke Dashboard</a></p>
 
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                             <thead>
                                 <tr>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Judul Tugas</th>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Deadline Tugas</th>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Submit</th>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">File Jawaban</th>
+                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
+                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jam Izin</th>
+                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jam Kembali</th>
+                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Alasan</th>
                                     <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nilai</th>
-                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Komentar Admin</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($result->num_rows > 0): ?>
-                                    <?php while ($row = $result->fetch_assoc()): ?>
-                                        <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['judul']); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y', strtotime($row['deadline'])); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo date('d/m/Y H:i', strtotime($row['tanggal_submit'])); ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700">
-                                                <?php if ($row['file_jawaban']): ?>
-                                                    <a href="../../uploads/tugas_jawaban/<?php echo htmlspecialchars($row['file_jawaban']); ?>" target="_blank" class="text-blue-500 hover:underline">Download</a>
-                                                <?php else: echo '-';
-                                                endif; ?>
-                                            </td>
-                                            <td class="py-3 px-4 text-sm text-gray-700">
-                                                <?php
-                                                if ($row['tugas_status'] == 'diperiksa') {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-green-700 bg-green-100 rounded-full">Sudah Dinilai</span>';
-                                                } elseif ($row['tugas_status'] == 'selesai') {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full">Menunggu Penilaian</span>';
-                                                } else {
-                                                    echo '<span class="px-2 py-1 text-xs font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">' . htmlspecialchars($row['tugas_status']) . '</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo $row['nilai'] !== null ? htmlspecialchars($row['nilai']) : '-'; ?></td>
-                                            <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['komentar'] ?? '-'); ?></td>
-                                        </tr>
-                                    <?php endwhile; ?>
+                                <?php if ($izin->num_rows > 0): ?>
+                                    <?php while ($row = $izin->fetch_assoc()) { ?>
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['tanggal']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['jam_izin']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['jam_selesai_izin']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['alasan']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700">
+                                            <?php
+                                            $status_class = '';
+                                            switch ($row['status']) {
+                                                case 'Menunggu': $status_class = 'text-yellow-700 bg-yellow-100'; break;
+                                                case 'Disetujui': $status_class = 'text-green-700 bg-green-100'; break;
+                                                case 'Ditolak': $status_class = 'text-red-700 bg-red-100'; break;
+                                                default: $status_class = 'text-gray-700 bg-gray-100'; break;
+                                            }
+                                            echo '<span class="px-2 py-1 text-xs font-semibold leading-tight ' . $status_class . ' rounded-full">' . htmlspecialchars($row['status']) . '</span>';
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="7" class="py-3 px-4 text-center text-sm text-gray-500">Anda belum mengirimkan jawaban untuk tugas apapun.</td>
+                                        <td colspan="5" class="py-3 px-4 text-center text-sm text-gray-500">Belum ada pengajuan izin nugas.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -213,9 +173,7 @@ include '../header_beckend.php';
                 sidebar.classList.remove('w-64');
                 sidebar.classList.add('w-20', 'collapsed');
 
-                sidebarTexts.forEach(text => {
-                    text.classList.add('opacity-0', 'pointer-events-none');
-                });
+                sidebarTexts.forEach(text => { text.classList.add('opacity-0', 'pointer-events-none'); });
                 if (sidebarLogoText) sidebarLogoText.classList.add('opacity-0', 'pointer-events-none');
                 if (sidebarUpgradeSection) sidebarUpgradeSection.classList.add('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
 
@@ -242,9 +200,7 @@ include '../header_beckend.php';
                 sidebar.classList.remove('w-20', 'collapsed');
                 sidebar.classList.add('w-64');
 
-                sidebarTexts.forEach(text => {
-                    text.classList.remove('opacity-0', 'pointer-events-none');
-                });
+                sidebarTexts.forEach(text => { text.classList.remove('opacity-0', 'pointer-events-none'); });
                 if (sidebarLogoText) sidebarLogoText.classList.remove('opacity-0', 'pointer-events-none');
                 if (sidebarUpgradeSection) sidebarUpgradeSection.classList.remove('opacity-0', 'h-0', 'p-0', 'mt-0', 'pointer-events-none');
 
@@ -271,8 +227,8 @@ include '../header_beckend.php';
         });
     </script>
 </body>
-
 </html>
+
 <?php
 $stmt->close();
 $conn->close();
