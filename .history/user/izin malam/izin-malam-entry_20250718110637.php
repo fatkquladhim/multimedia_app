@@ -16,13 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jam_izin = $_POST['jam_izin'] ?? '';
     $jam_selesai_izin = $_POST['jam_selesai_izin'] ?? '';
     $alasan = $_POST['alasan'] ?? '';
+    $status = 'Menunggu';
     $id_anggota = $_SESSION['user_id'];
 
     // Validasi: cek apakah id user ada di anggota
     $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . $id_anggota); // Direct query for check
     if ($result_anggota->num_rows > 0) {
-        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('issss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan);
+        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan, status) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->bind_param('isssss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan, $status);
         if ($stmt->execute()) {
             $message = 'Pengajuan izin malam berhasil dikirim!';
             $message_type = 'success';
@@ -37,29 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $result_anggota->close();
 }
-
-// Fetch profile information before closing the connection
-$profile_name = "User "; // Default
-$profile_photo = "default_profile.jpg"; // Default
-$id_user = $_SESSION['user_id']; // Make sure to get the user ID from the session
-
-$stmt_profile = $conn->prepare('SELECT nama_lengkap, foto FROM profile WHERE id_user = ?');
-if ($stmt_profile) {
-    $stmt_profile->bind_param('i', $id_user);
-    $stmt_profile->execute();
-    $stmt_profile->bind_result($fetched_name, $fetched_photo);
-    if ($stmt_profile->fetch()) {
-        $profile_name = htmlspecialchars($fetched_name);
-        $profile_photo = htmlspecialchars($fetched_photo);
-    }
-    $stmt_profile->close();
-} else {
-    // Handle error if the statement could not be prepared
-    $message = 'Error preparing statement for profile fetch.';
-    $message_type = 'error';
-}
-
 $conn->close();
+include '../header_beckend.php';
 ?>
 
 <!DOCTYPE html>
@@ -160,34 +140,7 @@ $conn->close();
             <?php include '../sidebar.php'; ?>
 
             <div class="flex-1 p-2">
-                 <header class="bg-white border-b border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <!-- Sidebar Toggle Button -->
-                            <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                                <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-10 h-10 bg-white-600 rounded-full flex items-center justify-center overflow-hidden">
-                                    <img src="../../uploads/profiles/<?php echo $profile_photo; ?>" alt="Profile Photo" class="w-full h-full object-cover rounded-full">
-                                </div>
-                                <div class="flex items-center space-x-1">
-                                    <a href="../profile/profile_view.php">
-                                        <span class="font-medium text-gray-800"><?php echo $profile_name; ?></span>
-                                        <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <?php include '../header_frontend.php'; ?>
                 <main class="p-6">
                     <?php if ($message): ?>
                         <div class="message <?php echo $message_type; ?>"><?php echo $message; ?></div>
@@ -213,6 +166,7 @@ $conn->close();
                             </div>
                             <div class="flex space-x-4 mt-6">
                                 <button type="submit" class="btn btn-primary">Ajukan</button>
+                                <a href="izin-malam.php" class="btn btn-secondary flex items-center justify-center">Kembali</a>
                             </div>
                         </form>
                     </div>

@@ -21,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validasi: cek apakah id user ada di anggota
     $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . $id_anggota); // Direct query for check
     if ($result_anggota->num_rows > 0) {
-        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan) VALUES (?, ?, ?, ?, ?)');
+        $stmt = $conn->prepare('INSERT INTO izin_nugas (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan) VALUES (?, ?, ?, ?, ?)');
         $stmt->bind_param('issss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan);
         if ($stmt->execute()) {
-            $message = 'Pengajuan izin malam berhasil dikirim!';
+            $message = 'Pengajuan izin nugas berhasil dikirim!';
             $message_type = 'success';
         } else {
-            $message = 'Gagal mengajukan izin malam. Pastikan akun Anda terdaftar sebagai anggota.';
+            $message = 'Gagal mengajukan izin nugas. Pastikan akun Anda terdaftar sebagai anggota.';
             $message_type = 'error';
         }
         $stmt->close();
@@ -65,7 +65,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ajukan Izin Malam</title>
+    <title>Ajukan Izin nugas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -213,6 +213,7 @@ $conn->close();
                             </div>
                             <div class="flex space-x-4 mt-6">
                                 <button type="submit" class="btn btn-primary">Ajukan</button>
+                                <a href="izin-nugas.php" class="btn btn-secondary flex items-center justify-center">Kembali</a>
                             </div>
                         </form>
                     </div>

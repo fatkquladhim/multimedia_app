@@ -213,6 +213,7 @@ $conn->close();
                             </div>
                             <div class="flex space-x-4 mt-6">
                                 <button type="submit" class="btn btn-primary">Ajukan</button>
+                                <a href="izin-malam.php" class="btn btn-secondary flex items-center justify-center">Kembali</a>
                             </div>
                         </form>
                     </div>

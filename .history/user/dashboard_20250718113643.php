@@ -79,49 +79,25 @@ $stmt_profile->close();
     </script>
     <style>
         .sidebar {
-            transition: width 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
 
         .sidebar-text {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .sidebar-logo-text {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
 
         .sidebar.collapsed {
-            width: 4rem !important;
+            width: 4rem;
         }
 
         .sidebar.collapsed .sidebar-text {
             opacity: 0;
             transform: translateX(-20px);
-            width: 0;
-            overflow: hidden;
-            white-space: nowrap;
         }
 
         .sidebar.collapsed .sidebar-logo-text {
             opacity: 0;
             transform: translateX(-20px);
-            width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .sidebar.collapsed .sidebar-nav-item {
-            justify-content: center;
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        .sidebar.collapsed .sidebar-nav-item span {
-            display: none;
-        }
-
-        .sidebar.collapsed .sidebar-nav-item i {
-            margin-right: 0;
         }
 
         .card-hover {
@@ -316,9 +292,9 @@ $stmt_profile->close();
                     <!-- Task Section -->
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Tugas Masuk</h2>
-                        <!-- <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
+                        <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
                             <i class="fas fa-arrow-right mr-2"></i>Lihat Semua
-                        </a> -->
+                        </a>
                     </div>
 
                     <!-- Task Cards -->
@@ -456,20 +432,15 @@ $stmt_profile->close();
         let isSidebarOpen = true;
 
         sidebarToggle.addEventListener('click', () => {
-            if (isSidebarOpen) {
-                // Collapse sidebar
-                sidebar.classList.add('collapsed');
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-16');
-                sidebarToggle.querySelector('i').classList.replace('fa-bars', 'fa-arrow-right');
-            } else {
-                // Expand sidebar
-                sidebar.classList.remove('collapsed');
-                sidebar.classList.remove('w-16');
-                sidebar.classList.add('w-64');
-                sidebarToggle.querySelector('i').classList.replace('fa-arrow-right', 'fa-bars');
-            }
+            sidebar.classList.toggle('collapsed');
             isSidebarOpen = !isSidebarOpen;
+            
+            const icon = sidebarToggle.querySelector('i');
+            if (isSidebarOpen) {
+                icon.classList.replace('fa-arrow-right', 'fa-bars');
+            } else {
+                icon.classList.replace('fa-bars', 'fa-arrow-right');
+            }
         });
 
         // Dark Mode Toggle

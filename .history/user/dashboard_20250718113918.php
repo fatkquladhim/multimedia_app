@@ -316,9 +316,9 @@ $stmt_profile->close();
                     <!-- Task Section -->
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Tugas Masuk</h2>
-                        <!-- <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
+                        <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
                             <i class="fas fa-arrow-right mr-2"></i>Lihat Semua
-                        </a> -->
+                        </a>
                     </div>
 
                     <!-- Task Cards -->

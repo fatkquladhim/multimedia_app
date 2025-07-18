@@ -8,40 +8,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 require_once '../../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $id_anggota = $_SESSION['user_id'];
-$stmt = $conn->prepare('SELECT tanggal, jam_izin, jam_selesai_izin, alasan FROM izin_nugas WHERE id_anggota = ? ORDER BY tanggal DESC');
+$stmt = $conn->prepare('SELECT tanggal, jam_izin, jam_selesai_izin, alasan, status FROM izin_malam WHERE id_anggota = ? ORDER BY tanggal DESC');
 $stmt->bind_param('i', $id_anggota);
 $stmt->execute();
 $izin = $stmt->get_result();
 
-// Fetch profile information before closing the connection
-$profile_name = "User "; // Default
-$profile_photo = "default_profile.jpg"; // Default
-$id_user = $_SESSION['user_id']; // Make sure to get the user ID from the session
-
-$stmt_profile = $conn->prepare('SELECT nama_lengkap, foto FROM profile WHERE id_user = ?');
-if ($stmt_profile) {
-    $stmt_profile->bind_param('i', $id_user);
-    $stmt_profile->execute();
-    $stmt_profile->bind_result($fetched_name, $fetched_photo);
-    if ($stmt_profile->fetch()) {
-        $profile_name = htmlspecialchars($fetched_name);
-        $profile_photo = htmlspecialchars($fetched_photo);
-    }
-    $stmt_profile->close();
-} else {
-    // Handle error if the statement could not be prepared
-    $message = 'Error preparing statement for profile fetch.';
-    $message_type = 'error';
-}
-
-$conn->close();
-
+include '../header_beckend.php';
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Izin nugas</title>
+    <title>Izin Malam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -117,38 +95,12 @@ $conn->close();
             <?php include '../sidebar.php'; ?>
 
             <div class="flex-1 p-2">
-                 <header class="bg-white border-b border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <!-- Sidebar Toggle Button -->
-                            <button id="sidebarToggle" class="p-2 text-gray-600 hover:text-gray-800 focus:outline-none mr-4">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                                <p class="text-gray-600"><?php echo date('l, d F Y'); ?></p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-10 h-10 bg-white-600 rounded-full flex items-center justify-center overflow-hidden">
-                                    <img src="../../uploads/profiles/<?php echo $profile_photo; ?>" alt="Profile Photo" class="w-full h-full object-cover rounded-full">
-                                </div>
-                                <div class="flex items-center space-x-1">
-                                    <a href="../profile/profile_view.php">
-                                        <span class="font-medium text-gray-800"><?php echo $profile_name; ?></span>
-                                        <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <?php include '../header_frontend.php'; ?>
 
                 <main class="p-6">
-                    <h2 class="text-xl font-bold mb-4">Riwayat Izin nugas</h2>
-        
+                    <h2 class="text-xl font-bold mb-4">Riwayat Izin Malam</h2>
+                    <p class="mb-4"><a href="izin-malam-entry.php" class="text-blue-600 hover:underline">Ajukan Izin Malam</a> | <a href="../dashboard.php" class="text-blue-600 hover:underline">Kembali ke Dashboard</a></p>
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                             <thead>
@@ -157,6 +109,7 @@ $conn->close();
                                     <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jam Izin</th>
                                     <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jam Kembali</th>
                                     <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Alasan</th>
+                                    <th class="py-3 px-4 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -167,11 +120,23 @@ $conn->close();
                                         <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['jam_izin']); ?></td>
                                         <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['jam_selesai_izin']); ?></td>
                                         <td class="py-3 px-4 text-sm text-gray-700"><?php echo htmlspecialchars($row['alasan']); ?></td>
+                                        <td class="py-3 px-4 text-sm text-gray-700">
+                                            <?php
+                                            $status_class = '';
+                                            switch ($row['status']) {
+                                                case 'Menunggu': $status_class = 'text-yellow-700 bg-yellow-100'; break;
+                                                case 'Disetujui': $status_class = 'text-green-700 bg-green-100'; break;
+                                                case 'Ditolak': $status_class = 'text-red-700 bg-red-100'; break;
+                                                default: $status_class = 'text-gray-700 bg-gray-100'; break;
+                                            }
+                                            echo '<span class="px-2 py-1 text-xs font-semibold leading-tight ' . $status_class . ' rounded-full">' . htmlspecialchars($row['status']) . '</span>';
+                                            ?>
+                                        </td>
                                     </tr>
                                     <?php } ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5" class="py-3 px-4 text-center text-sm text-gray-500">Belum ada pengajuan izin nugas.</td>
+                                        <td colspan="5" class="py-3 px-4 text-center text-sm text-gray-500">Belum ada pengajuan izin malam.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

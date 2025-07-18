@@ -69,18 +69,39 @@ $conn->close();
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        /* Consolidated CSS from all provided files */
+
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        /* Form Group Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
         .form-group input[type="date"],
         .form-group input[type="time"],
-        .form-group input[type="text"] {
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="file"] {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ccc;
             border-radius: 0.375rem;
             box-sizing: border-box;
         }
+        .form-group input[type="file"] {
+            padding: 0.5rem;
+        }
+
+        /* Button Styles */
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.375rem;
@@ -88,29 +109,80 @@ $conn->close();
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        .btn-primary { background-color: #4F46E5; color: white; border: none; }
-        .btn-primary:hover { background-color: #4338CA; }
-        .btn-secondary { background-color: #6B7280; color: white; border: none; }
-        .btn-secondary:hover { background-color: #4B5563; }
-        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .btn-primary {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #4338CA;
+        }
+        .btn-secondary {
+            background-color: #6B7280;
+            color: white;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #4B5563;
+        }
+
+        /* Message Styles */
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Table Styles (from izin-malam.php, izin-nugas.php, portfolio.php, riwayat_tugas.php) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sidebar Styles (common across many files) */
         .sidebar {
             transition: width 0.3s ease-in-out;
         }
-
         .sidebar-text {
             transition: opacity 0.3s ease-in-out, margin-left 0.3s ease-in-out;
         }
-
         .sidebar-nav-item {
             justify-content: flex-start;
         }
-
         .sidebar.collapsed .sidebar-nav-item {
             justify-content: center;
         }
-
         .sidebar.collapsed .sidebar-text {
             opacity: 0;
             width: 0;
@@ -118,7 +190,6 @@ $conn->close();
             white-space: nowrap;
             pointer-events: none;
         }
-
         .sidebar.collapsed .sidebar-logo-text {
             opacity: 0;
             width: 0;
@@ -126,11 +197,9 @@ $conn->close();
             white-space: nowrap;
             pointer-events: none;
         }
-
         .sidebar.collapsed .sidebar-logo-icon {
             margin-right: 0 !important;
         }
-
         .sidebar.collapsed .sidebar-create-button .sidebar-text {
             opacity: 0;
             width: 0;
@@ -138,11 +207,9 @@ $conn->close();
             white-space: nowrap;
             pointer-events: none;
         }
-
         .sidebar.collapsed .sidebar-create-button i {
             margin-right: 0 !important;
         }
-
         .sidebar.collapsed .sidebar-upgrade-section {
             opacity: 0;
             height: 0;
@@ -151,6 +218,36 @@ $conn->close();
             padding-bottom: 0;
             margin-top: 0;
             pointer-events: none;
+        }
+
+        /* Dashboard Specific Styles (from dashboard.php) */
+        .gradient-yellow {
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+        }
+        .gradient-purple {
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+        }
+        .gradient-pink {
+            background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+        }
+        .gradient-gray {
+            background: linear-gradient(135deg, #D1D5DB 0%, #9CA3AF 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Task Details (from tugas_kerjakan.php) */
+        .task-details {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .task-details strong {
+            display: inline-block;
+            width: 100px;
         }
     </style>
 </head>
@@ -284,7 +381,7 @@ $conn->close();
                         sidebarCreateButton.querySelector('button').classList.remove('justify-center');
                         sidebarCreateButton.querySelector('button').classList.add('space-x-2');
                     }
-                }
+                    }
 
                 sidebarToggle.querySelector('i').classList.replace('fa-arrow-right', 'fa-bars');
             }
