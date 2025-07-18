@@ -223,7 +223,7 @@ $stmt_profile->close();
                         <i class="fas fa-history flex-shrink-0"></i>
                         <span class="font-medium sidebar-text">Riwayat Tugas</span>
                     </a>
-                    <a href="akun/profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+                    <a href="profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
                         <i class="fas fa-cog flex-shrink-0"></i>
                         <span class="font-medium sidebar-text">Pengaturan Akun</span>
                     </a>

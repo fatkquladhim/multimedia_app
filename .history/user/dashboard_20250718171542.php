@@ -156,14 +156,14 @@ $stmt_profile->close();
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
         }
 
-
+       
 
         .status-pending {
             background: linear-gradient(146deg, #058cd0 0%, #e9f0ff00 100%);
         }
 
         .status-waiting {
-            background: linear-gradient(135deg, #f2db0f9c 0%, #fcf8f3 100%);
+            background: linear-gradient(135deg,#f2db0f9c 0%, #fcf8f3 100%);
         }
 
         .status-completed {
@@ -223,17 +223,16 @@ $stmt_profile->close();
                         <i class="fas fa-history flex-shrink-0"></i>
                         <span class="font-medium sidebar-text">Riwayat Tugas</span>
                     </a>
-                    <a href="akun/profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
-                        <i class="fas fa-cog flex-shrink-0"></i>
-                        <span class="font-medium sidebar-text">Pengaturan Akun</span>
-                    </a>
 
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <a href="../auth/logout.php" class="flex items-center space-x-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl sidebar-nav-item transition-colors">
-                            <i class="fas fa-sign-out-alt flex-shrink-0"></i>
-                            <span class="font-medium sidebar-text">Logout</span>
-                        </a>
-                    </div>
+                    <a href="../profile/profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+            <i class="fas fa-cog flex-shrink-0"></i>
+            <span class="font-medium sidebar-text">Pengaturan Akun</span>
+        </a>
+
+        <a href="../auth/logout.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+            <i class="fas fa-sign-out-alt flex-shrink-0"></i>
+            <span class="font-medium sidebar-text">Logout</span>
+        </a>
                 </nav>
             </div>
 
@@ -259,7 +258,7 @@ $stmt_profile->close();
                                 <i class="fas fa-sun dark:hidden text-xl"></i>
                                 <i class="fas fa-moon hidden dark:block text-xl"></i>
                             </button>
-
+                            
                             <!-- Profile -->
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center overflow-hidden">
@@ -317,7 +316,7 @@ $stmt_profile->close();
                                 $status_text = 'Pending';
                                 $action_text = 'Kerjakan';
                                 $action_link = "./tugas/tugas_kerjakan.php?id=" . $row['id'];
-
+                                
                                 if ($row['jawaban_id'] && $row['status'] == 'selesai') {
                                     $card_class = 'status-waiting';
                                     $icon_class = 'fas fa-hourglass-half';
@@ -332,7 +331,7 @@ $stmt_profile->close();
                                     $action_link = './tugas/tugas_detail.php?id=' . $row['id'];
                                 }
                                 ?>
-
+                                
                                 <div class="<?= $card_class ?> rounded-2xl p-6 card-hover animate-fade-in transform transition-all duration-300">
                                     <div class="flex items-start justify-between mb-4">
                                         <div class="flex items-center space-x-3">
@@ -351,12 +350,12 @@ $stmt_profile->close();
                                             <?= $status_text ?>
                                         </span>
                                     </div>
-
+                                    
                                     <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
                                         <?php echo nl2br(htmlspecialchars(substr($row['deskripsi'], 0, 100))); ?>
                                         <?php if (strlen($row['deskripsi']) > 100) echo '...'; ?>
                                     </p>
-
+                                    
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center space-x-2">
                                             <?php if ($row['nilai']): ?>
@@ -368,7 +367,7 @@ $stmt_profile->close();
                                                 </div>
                                             <?php endif; ?>
                                         </div>
-
+                                        
                                         <?php if (!$row['jawaban_id']): ?>
                                             <a href="<?= $action_link ?>" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
                                                 <i class="fas fa-play mr-2"></i>

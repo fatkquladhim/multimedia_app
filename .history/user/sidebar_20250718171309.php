@@ -1,8 +1,8 @@
 <div id="sidebar" class="w-64 bg-gray-50 border-r border-gray-200 p-6 flex flex-col sidebar">
     <!-- Logo -->
     <div class="flex items-center space-x-2 mb-8" style="text-align: center;">
-        <img src="../../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
-        <span class="text-xl font-bold text-gray-800 sidebar-logo-text">multimedia</span>
+           <img src="../../public/assets/imgs/rev-removebg-preview.png" style="max-width:50px;">
+           <span class="text-xl font-bold text-gray-800 sidebar-logo-text">multimedia</span>
     </div>
 
     <!-- Navigation -->
@@ -33,16 +33,14 @@
         </a>
 
         <!-- New: Link to Account Settings -->
-        <a href="../akun/profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+        <a href="../profile/profile_settings.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
             <i class="fas fa-cog flex-shrink-0"></i>
             <span class="font-medium sidebar-text">Pengaturan Akun</span>
         </a>
 
-        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <a href="../auth/logout.php" class="flex items-center space-x-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl sidebar-nav-item transition-colors">
-                <i class="fas fa-sign-out-alt flex-shrink-0"></i>
-                <span class="font-medium sidebar-text">Logout</span>
-            </a>
-        </div>
+        <a href="../auth/logout.php" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg sidebar-nav-item">
+            <i class="fas fa-sign-out-alt flex-shrink-0"></i>
+            <span class="font-medium sidebar-text">Logout</span>
+        </a>
     </nav>
 </div>
