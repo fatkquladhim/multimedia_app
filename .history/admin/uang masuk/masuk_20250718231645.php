@@ -61,23 +61,10 @@ $total_manual = $conn->query($q_total)->fetch_assoc()['total'] ?? 0;
 $q_total_auto = "SELECT SUM(biaya) as total FROM penyewaan_barang WHERE status='dikembalikan' AND biaya > 0";
 $total_auto = $conn->query($q_total_auto)->fetch_assoc()['total'] ?? 0;
 $total_semua = $total_manual + $total_auto;
+
+include '../header.php'; // Path relatif dari 'anggota/'
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Uang Masuk</title>
-    <style>
-        .container { padding: 20px; }
-        .form-group { margin-bottom: 10px; }
-        .alert { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-        .alert-success { background-color: #d4edda; color: #155724; }
-        .alert-danger { background-color: #f8d7da; color: #721c24; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; border: 1px solid #ddd; }
-        th { background-color: #f5f5f5; }
-    </style>
-</head>
-<body>
+
     <div class="container">
         <h2>Uang Masuk</h2>
         <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
@@ -178,6 +165,8 @@ $total_semua = $total_manual + $total_auto;
         <br>
         <a href="../dashboard.php">Kembali ke Dashboard</a>
     </div>
-</body>
-</html>
-<?php $conn->close(); ?>
+<?php
+// Sertakan footer
+include '../footer.php'; // Path relatif dari 'anggota/' ke 'includes/'
+$conn->close();
+?>

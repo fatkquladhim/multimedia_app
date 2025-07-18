@@ -26,23 +26,9 @@ $query = "SELECT tanggal, jumlah, keterangan, petugas FROM uang_keluar
           UNION ALL
           SELECT tanggal_kembali as tanggal, biaya as jumlah, CONCAT('Otomatis dari penyewaan ID: ', id) as keterangan, NULL as petugas FROM penyewaan_barang WHERE status='dikembalikan' AND biaya > 0";
 $result = $conn->query($query);
+include '../header.php'; // Path relatif dari 'anggota/'
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Uang Keluar</title>
-    <style>
-        .container { padding: 20px; }
-        .form-group { margin-bottom: 10px; }
-        .alert { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-        .alert-success { background-color: #d4edda; color: #155724; }
-        .alert-danger { background-color: #f8d7da; color: #721c24; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; border: 1px solid #ddd; }
-        th { background-color: #f5f5f5; }
-    </style>
-</head>
-<body>
+
     <div class="container">
         <h2>Uang Keluar</h2>
         <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
