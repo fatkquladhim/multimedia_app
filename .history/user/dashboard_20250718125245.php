@@ -163,7 +163,7 @@ $stmt_profile->close();
         }
 
         .status-waiting {
-            background: linear-gradient(135deg,#f2db0f9c 0%, #fcf8f3 100%);
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
         }
 
         .status-completed {
@@ -171,7 +171,7 @@ $stmt_profile->close();
         }
 
         .dark .status-pending {
-            background: linear-gradient(135deg, #0c1d77 0%, #1f293700 100%);
+            background: linear-gradient(135deg, #451a03 0%, #78350f 100%);
         }
 
         .dark .status-waiting {
@@ -412,7 +412,7 @@ $stmt_profile->close();
                         <!-- Izin Nugas Card -->
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover animate-fade-in">
                             <div class="flex items-center space-x-4">
-                                <div class="w-16 h-16 bg-gradient-to-r from-blue-900 to-blue-400 rounded-2xl flex items-center justify-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-900 to-blue-4000 rounded-2xl flex items-center justify-center">
                                     <i class="fas fa-laptop-code text-white text-2xl"></i>
                                 </div>
                                 <div class="flex-1">

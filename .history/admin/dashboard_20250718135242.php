@@ -26,7 +26,7 @@ try {
                                         FROM tugas t 
                                         JOIN tugas_jawaban tj ON t.id = tj.id_tugas
                                         JOIN users u ON tj.id_user = u.id 
-                                        WHERE t.status = 'diperiksa' LIMIT 3");
+                                        WHERE t.status = 'pending_review' LIMIT 3");
     $stmt_tugas_review->execute();
     $tugas_reviews = $stmt_tugas_review->get_result();
 
@@ -70,7 +70,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Eduhouse - Learning Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -450,7 +450,7 @@ try {
                                     </div>
                                 </div>
                                 <button class="w-full px-4 py-2 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
+                                    <a href="beri_tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
                                         Nilai Tugas
                                     </a>
                                 </button>
@@ -473,18 +473,18 @@ try {
                                 <?php while ($row = $izin_malam_anggota->fetch_assoc()): ?>
                                     <div class="flex items-start justify-between p-4 bg-light-blue-50 dark:bg-light-blue-900 rounded-xl hover-scale">
                                         <div class="flex items-start space-x-3">
-                                            <div class="flex gap-10">
-                                                <h4 class="font-semibold text-gray-800 dark:text-white"> Nama:<br><?php echo htmlspecialchars($row['nama']); ?></h4>
-                                                <div class="flex gap-10">
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Tanggal: <br><?php echo date('d M Y', strtotime($row['tanggal'])); ?>
-                                                    </h4>
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Jam: <br><?php echo htmlspecialchars($row['jam_izin']); ?> - <?php echo htmlspecialchars($row['jam_selesai_izin']); ?>
-                                                    </h4>
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Alasan: <br><?php echo htmlspecialchars($row['alasan']); ?>
-                                                    </h4>
+                                            <div class="flex">
+                                                <h4 class="font-semibold text-gray-800 dark:text-white"><?php echo htmlspecialchars($row['nama']); ?></h4>
+                                                <div class="text-sm space-y-1">
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Tanggal: <?php echo date('d M Y', strtotime($row['tanggal'])); ?>
+                                                    </p>
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Jam: <?php echo htmlspecialchars($row['jam_izin']); ?> - <?php echo htmlspecialchars($row['jam_selesai_izin']); ?>
+                                                    </p>
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Alasan: <?php echo htmlspecialchars($row['alasan']); ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -508,7 +508,7 @@ try {
                         <div class="overflow-x-auto">
                             <table class="min-w-full bg-white dark:bg-slate-800">
                                 <thead>
-                                    <tr class=" dark:bg-light-blue-900">
+                                    <tr>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Nama</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Email</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">No HP</th>
@@ -518,9 +518,9 @@ try {
                                     <?php if ($all_anggota->num_rows > 0): ?>
                                         <?php while ($row = $all_anggota->fetch_assoc()): ?>
                                             <tr class="hover:bg-gray-50 dark:hover:bg-slate-700">
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['nama']); ?></td>
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['email']); ?></td>
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['no_hp']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['nama']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['email']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['no_hp']); ?></td>
                                             </tr>
                                         <?php endwhile; ?>
                                     <?php else: ?>

@@ -1,76 +1,136 @@
 <?php
 session_start();
+
+// Security: Regenerate session ID on first access or after login for better security
+if (!isset($_SESSION['initiated'])) {
+    session_regenerate_id(true);
+    $_SESSION['initiated'] = true;
+}
+
+// Security: Session timeout
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) { // 30 minutes inactivity
+    session_unset();
+    session_destroy();
+    header('Location: ../auth/login.php');
+    exit;
+}
+$_SESSION['LAST_ACTIVITY'] = time(); // Update last activity time stamp
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: ../auth/login.php');
     exit;
 }
+
+// Include database configuration
 require_once '../includes/db_config.php';
 
-// Menggunakan mysqli_report untuk penanganan error yang lebih baik
+// Constants for limits and pagination
+define('TASKS_REVIEW_LIMIT', 3);
+define('IZIN_MALAM_LIMIT', 4);
+define('ANGGOTA_PER_PAGE', 10);
+
+// Using mysqli_report for better error handling
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+$conn = null; // Initialize connection variable
 
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $conn->set_charset("utf8mb4");
 
-    // Statistik
-    $user_count = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
-    $anggota_count = $conn->query("SELECT COUNT(*) FROM anggota")->fetch_row()[0];
-    $tugas_count = $conn->query("SELECT COUNT(*) FROM tugas")->fetch_row()[0];
-    $izin_malam_count = $conn->query("SELECT COUNT(*) FROM izin_malam")->fetch_row()[0];
-    $izin_nugas_count = $conn->query("SELECT COUNT(*) FROM izin_nugas")->fetch_row()[0];
+    // --- Statistics (using prepared statements for consistency) ---
+    $user_count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM users");
+    $stmt->execute();
+    $user_count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
 
-    // Query tugas yang menunggu review (koreksi: join dengan tugas_jawaban)
-    $stmt_tugas_review = $conn->prepare("SELECT t.id, t.judul AS nama_tugas, t.deskripsi, u.username, 
+    $anggota_count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM anggota");
+    $stmt->execute();
+    $anggota_count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    $tugas_count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM tugas");
+    $stmt->execute();
+    $tugas_count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    $izin_malam_count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM izin_malam");
+    $stmt->execute();
+    $izin_malam_count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    $izin_nugas_count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM izin_nugas");
+    $stmt->execute();
+    $izin_nugas_count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    // --- Query tasks awaiting review ---
+    $stmt_tugas_review = $conn->prepare("SELECT t.id, t.judul AS nama_tugas, t.deskripsi, u.username,
                                         tj.file_jawaban, tj.tanggal_submit, tj.id_user
-                                        FROM tugas t 
+                                        FROM tugas t
                                         JOIN tugas_jawaban tj ON t.id = tj.id_tugas
-                                        JOIN users u ON tj.id_user = u.id 
-                                        WHERE t.status = 'diperiksa' LIMIT 3");
+                                        JOIN users u ON tj.id_user = u.id
+                                        WHERE t.status = 'pending_review' LIMIT ?");
+    $stmt_tugas_review->bind_param("i", TASKS_REVIEW_LIMIT);
     $stmt_tugas_review->execute();
     $tugas_reviews = $stmt_tugas_review->get_result();
 
-    // Query anggota yang izin malam dengan detail lengkap
-    $stmt_izin_malam = $conn->prepare("SELECT a.id, a.nama, im.tanggal, 
-                                      DATE_FORMAT(im.jam_izin, '%H:%i') as jam_izin, 
+    // --- Query members with night permits ---
+    $stmt_izin_malam = $conn->prepare("SELECT a.id, a.nama, im.tanggal,
+                                      DATE_FORMAT(im.jam_izin, '%H:%i') as jam_izin,
                                       DATE_FORMAT(im.jam_selesai_izin, '%H:%i') as jam_selesai_izin,
-                                      im.alasan
-                                      FROM izin_malam im 
-                                      JOIN anggota a ON im.id_anggota = a.id 
-                                      WHERE im.tanggal >= CURDATE() 
-                                      ORDER BY im.tanggal, im.jam_izin LIMIT 4");
+                                      im.alasan, im.status
+                                      FROM izin_malam im
+                                      JOIN anggota a ON im.id_anggota = a.id
+                                      WHERE im.tanggal >= CURDATE()
+                                      ORDER BY im.tanggal, im.jam_izin LIMIT ?");
+    $stmt_izin_malam->bind_param("i", IZIN_MALAM_LIMIT);
     $stmt_izin_malam->execute();
     $izin_malam_anggota = $stmt_izin_malam->get_result();
 
-    // Query semua anggota dengan pagination
+    // --- Query all members with pagination ---
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    $per_page = 10;
+    $per_page = ANGGOTA_PER_PAGE;
     $offset = ($page - 1) * $per_page;
 
-    $total_anggota = $conn->query("SELECT COUNT(*) FROM anggota")->fetch_row()[0];
+    $total_anggota = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM anggota");
+    $stmt->execute();
+    $total_anggota = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
     $total_pages = ceil($total_anggota / $per_page);
 
-    $stmt_all_anggota = $conn->prepare("SELECT id, nama, email, no_hp FROM anggota 
+    $stmt_all_anggota = $conn->prepare("SELECT id, nama, email, no_hp FROM anggota
                                        ORDER BY nama LIMIT ?, ?");
     $stmt_all_anggota->bind_param("ii", $offset, $per_page);
     $stmt_all_anggota->execute();
     $all_anggota = $stmt_all_anggota->get_result();
+
 } catch (mysqli_sql_exception $e) {
     error_log("Database error in dashboard.php: " . $e->getMessage());
-    die("Terjadi kesalahan pada database. Mohon coba lagi nanti.");
+    // Redirect to a generic error page instead of dying with a message
+    header('Location: /error.php'); // Assuming you have an error.php page
+    exit;
 } finally {
-    if (isset($conn)) {
+    if ($conn) { // Check if connection was successfully established before closing
         $conn->close();
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Eduhouse - Learning Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -450,7 +510,7 @@ try {
                                     </div>
                                 </div>
                                 <button class="w-full px-4 py-2 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
+                                    <a href="beri_tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
                                         Nilai Tugas
                                     </a>
                                 </button>
@@ -473,20 +533,28 @@ try {
                                 <?php while ($row = $izin_malam_anggota->fetch_assoc()): ?>
                                     <div class="flex items-start justify-between p-4 bg-light-blue-50 dark:bg-light-blue-900 rounded-xl hover-scale">
                                         <div class="flex items-start space-x-3">
-                                            <div class="flex gap-10">
-                                                <h4 class="font-semibold text-gray-800 dark:text-white"> Nama:<br><?php echo htmlspecialchars($row['nama']); ?></h4>
-                                                <div class="flex gap-10">
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Tanggal: <br><?php echo date('d M Y', strtotime($row['tanggal'])); ?>
-                                                    </h4>
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Jam: <br><?php echo htmlspecialchars($row['jam_izin']); ?> - <?php echo htmlspecialchars($row['jam_selesai_izin']); ?>
-                                                    </h4>
-                                                    <h4 class="font-semibold text-gray-800 dark:text-white">
-                                                        Alasan: <br><?php echo htmlspecialchars($row['alasan']); ?>
-                                                    </h4>
+                                            <div class="w-10 h-10 bg-light-blue-300 rounded-full overflow-hidden">
+                                                <img src="https://placehold.co/40x40" alt="Profil <?php echo htmlspecialchars($row['nama']); ?>" class="w-full h-full object-cover">
+                                            </div>
+                                            <div>
+                                                <h4 class="font-semibold text-gray-800 dark:text-white"><?php echo htmlspecialchars($row['nama']); ?></h4>
+                                                <div class="text-sm space-y-1">
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Tanggal: <?php echo date('d M Y', strtotime($row['tanggal'])); ?>
+                                                    </p>
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Jam: <?php echo htmlspecialchars($row['jam_izin']); ?> - <?php echo htmlspecialchars($row['jam_selesai_izin']); ?>
+                                                    </p>
+                                                    <p class="text-gray-600 dark:text-gray-400">
+                                                        Alasan: <?php echo htmlspecialchars($row['alasan']); ?>
+                                                    </p>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <button class="px-3 py-1 bg-light-blue-500 hover:bg-light-blue-600 text-white rounded-lg text-sm font-medium transition-colors">
+                                                <?php echo htmlspecialchars($row['status']); ?>
+                                            </button>
                                         </div>
                                     </div>
                                 <?php endwhile; ?>
@@ -508,7 +576,7 @@ try {
                         <div class="overflow-x-auto">
                             <table class="min-w-full bg-white dark:bg-slate-800">
                                 <thead>
-                                    <tr class=" dark:bg-light-blue-900">
+                                    <tr>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Nama</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Email</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">No HP</th>
@@ -518,9 +586,9 @@ try {
                                     <?php if ($all_anggota->num_rows > 0): ?>
                                         <?php while ($row = $all_anggota->fetch_assoc()): ?>
                                             <tr class="hover:bg-gray-50 dark:hover:bg-slate-700">
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['nama']); ?></td>
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['email']); ?></td>
-                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-white"><?php echo htmlspecialchars($row['no_hp']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['nama']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['email']); ?></td>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><?php echo htmlspecialchars($row['no_hp']); ?></td>
                                             </tr>
                                         <?php endwhile; ?>
                                     <?php else: ?>

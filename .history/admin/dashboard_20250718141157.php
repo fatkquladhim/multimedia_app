@@ -450,7 +450,7 @@ try {
                                     </div>
                                 </div>
                                 <button class="w-full px-4 py-2 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
+                                    <a href="beri_tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
                                         Nilai Tugas
                                     </a>
                                 </button>
@@ -508,7 +508,7 @@ try {
                         <div class="overflow-x-auto">
                             <table class="min-w-full bg-white dark:bg-slate-800">
                                 <thead>
-                                    <tr class=" dark:bg-light-blue-900">
+                                    <tr>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Nama</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Email</th>
                                         <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">No HP</th>

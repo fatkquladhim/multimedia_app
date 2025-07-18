@@ -156,14 +156,32 @@ $stmt_profile->close();
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
         }
 
-       
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         .status-pending {
             background: linear-gradient(146deg, #058cd0 0%, #e9f0ff00 100%);
         }
 
         .status-waiting {
-            background: linear-gradient(135deg,#f2db0f9c 0%, #fcf8f3 100%);
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
         }
 
         .status-completed {
@@ -171,7 +189,7 @@ $stmt_profile->close();
         }
 
         .dark .status-pending {
-            background: linear-gradient(135deg, #0c1d77 0%, #1f293700 100%);
+            background: linear-gradient(135deg, #451a03 0%, #78350f 100%);
         }
 
         .dark .status-waiting {
@@ -395,13 +413,13 @@ $stmt_profile->close();
                         <!-- Izin Malam Card -->
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover animate-fade-in">
                             <div class="flex items-center space-x-4">
-                                <div class="w-16 h-16 bg-gradient-to-r from-blue-900 to-blue-400 rounded-2xl flex items-center justify-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
                                     <i class="fas fa-moon text-white text-2xl"></i>
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Izin Malam</h4>
                                     <p class="text-gray-600 dark:text-gray-400 mb-4">Ajukan izin malam dengan mudah dan cepat</p>
-                                    <a href="./izin malam/izin-malam-entry.php" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-300 hover:text-black transition-colors text-sm font-medium">
+                                    <a href="./izin malam/izin-malam-entry.php" class="inline-flex items-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors text-sm font-medium">
                                         <i class="fas fa-plus mr-2"></i>
                                         Ajukan Izin
                                     </a>
@@ -412,13 +430,13 @@ $stmt_profile->close();
                         <!-- Izin Nugas Card -->
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 card-hover animate-fade-in">
                             <div class="flex items-center space-x-4">
-                                <div class="w-16 h-16 bg-gradient-to-r from-blue-900 to-blue-400 rounded-2xl flex items-center justify-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
                                     <i class="fas fa-laptop-code text-white text-2xl"></i>
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Izin Nugas</h4>
                                     <p class="text-gray-600 dark:text-gray-400 mb-4">Kelola izin mengerjakan tugas dengan efisien</p>
-                                    <a href="./izin nugas/izin-nugas-entry.php" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-300 hover:text-black transition-colors text-sm font-medium">
+                                    <a href="./izin nugas/izin-nugas-entry.php" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
                                         <i class="fas fa-plus mr-2"></i>
                                         Ajukan Izin
                                     </a>

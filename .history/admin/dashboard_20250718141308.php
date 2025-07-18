@@ -450,7 +450,7 @@ try {
                                     </div>
                                 </div>
                                 <button class="w-full px-4 py-2 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    <a href="beri tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
+                                    <a href="beri_tugas/tugas_user_review.php?id_tugas=<?php echo htmlspecialchars($row['id']); ?>&id_user=<?php echo htmlspecialchars($row['id_user']); ?>" class="block">
                                         Nilai Tugas
                                     </a>
                                 </button>

@@ -163,7 +163,7 @@ $stmt_profile->close();
         }
 
         .status-waiting {
-            background: linear-gradient(135deg,#f2db0f9c 0%, #fcf8f3 100%);
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
         }
 
         .status-completed {
