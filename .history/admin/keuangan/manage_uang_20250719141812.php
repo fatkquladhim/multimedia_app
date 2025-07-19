@@ -11,41 +11,22 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 // Proses tambah data keuangan
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_data'])) {
     $tanggal = $_POST['tanggal'];
-    $keterangan = $_POST['keterangan'] ?? '';
     $pemasukan = $_POST['pemasukan'] ?? 0;
     $pengeluaran = $_POST['pengeluaran'] ?? 0;
+    $keterangan_pemasukan = $_POST['keterangan_pemasukan'] ?? '';
+    $keterangan_pengeluaran = $_POST['keterangan_pengeluaran'] ?? '';
 
     // Hitung saldo baru
     $saldo_akhir = ($pemasukan - $pengeluaran);
 
-    // Corrected: 5 columns, 5 placeholders, 5 variables, 5 type specifiers
-    $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, keterangan, pemasukan, pengeluaran, saldo)
-                           VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("siisi", $tanggal, $keterangan, $pemasukan, $pengeluaran, $saldo_akhir);
+    $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, pemasukan, pengeluaran, keterangan_pemasukan, keterangan_pengeluaran, saldo)
+                           VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("siissi", $tanggal, $pemasukan, $pengeluaran, $keterangan_pemasukan, $keterangan_pengeluaran, $saldo_akhir);
     $stmt->execute();
 
     header("Location: manage_uang.php?status=success&message=Data keuangan berhasil ditambahkan");
     exit;
 }
-
-// Process automatic data from rentals (assuming this logic is still desired)
-$auto_pengeluaran_query = "SELECT tanggal_kembali as tanggal, biaya as pengeluaran, CONCAT('Otomatis dari penyewaan ID: ', id) as keterangan
-                            FROM penyewaan_barang WHERE status='dikembalikan' AND biaya > 0";
-$auto_result = $conn->query($auto_pengeluaran_query);
-
-while ($row = $auto_result->fetch_assoc()) {
-    $tanggal = $row['tanggal'];
-    $pengeluaran = $row['pengeluaran'];
-    $keterangan = $row['keterangan'];
-    $pemasukan = 0; // For automatic pengeluaran, pemasukan is 0
-    $saldo_akhir = -$pengeluaran;
-
-    $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, keterangan, pemasukan, pengeluaran, saldo)
-                           VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("siisi", $tanggal, $keterangan, $pemasukan, $pengeluaran, $saldo_akhir);
-    $stmt->execute();
-}
-
 
 // Proses hapus data
 if (isset($_GET['hapus']) && is_numeric($_GET['hapus'])) {
@@ -56,8 +37,28 @@ if (isset($_GET['hapus']) && is_numeric($_GET['hapus'])) {
 }
 
 
+
+// Simpan data otomatis ke dalam tabel keuangan
+while ($row = $auto_result->fetch_assoc()) {
+    $tanggal = $row['tanggal'];
+    $pengeluaran = $row['pengeluaran'];
+    $keterangan_pengeluaran = $row['keterangan_pengeluaran'];
+
+    // Hitung saldo baru
+    $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, pemasukan, pengeluaran, keterangan_pemasukan, keterangan_pengeluaran, saldo)
+                           VALUES (?, ?, ?, ?, ?, ?)");
+    $saldo_akhir = -$pengeluaran; // Saldo berkurang karena pengeluaran
+
+    // Define variables for the literal values
+    $pemasukan_auto = 0;
+    $keterangan_pemasukan_auto = '';
+
+    $stmt->bind_param("siissi", $tanggal, $pemasukan_auto, $pengeluaran, $keterangan_pemasukan_auto, $keterangan_pengeluaran, $saldo_akhir);
+    $stmt->execute();
+}
+
 // Query untuk mendapatkan data keuangan
-$query = "SELECT id as nomor, tanggal,keterangan, pemasukan, pengeluaran, saldo
+$query = "SELECT id as nomor, tanggal, pemasukan, pengeluaran, keterangan_pemasukan, keterangan_pengeluaran, saldo
           FROM keuangan ORDER BY tanggal DESC";
 $result = $conn->query($query);
 
@@ -90,12 +91,6 @@ include '../header.php';
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>keterangan</label>
-                    <input type="text" name="keterangan" class="form-control">
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
                     <label>Pemasukan:</label>
                     <input type="number" name="pemasukan" class="form-control" min="0" value="0">
                 </div>
@@ -104,6 +99,18 @@ include '../header.php';
                 <div class="form-group">
                     <label>Pengeluaran:</label>
                     <input type="number" name="pengeluaran" class="form-control" min="0" value="0">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Keterangan Pemasukan:</label>
+                    <input type="text" name="keterangan_pemasukan" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Keterangan Pengeluaran:</label>
+                    <input type="text" name="keterangan_pengeluaran" class="form-control">
                 </div>
             </div>
         </div>
@@ -119,9 +126,10 @@ include '../header.php';
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
-                            <th>Keterangan</th>
                             <th>Pemasukan</th>
                             <th>Pengeluaran</th>
+                            <th>Keterangan Pemasukan</th>
+                            <th>Keterangan Pengeluaran</th>
                             <th>Saldo</th>
                             <th>Aksi</th>
                         </tr>
@@ -134,12 +142,13 @@ include '../header.php';
                         <tr>
                             <td><?= $no++ ?></td>
                             <td><?= htmlspecialchars($row['tanggal']) ?></td>
-                            <td><?= htmlspecialchars($row['keterangan']) ?></td>
                             <td class="text-success">Rp <?= number_format($row['pemasukan'], 0, ',', '.') ?></td>
                             <td class="text-danger">Rp <?= number_format($row['pengeluaran'], 0, ',', '.') ?></td>
+                            <td><?= htmlspecialchars($row['keterangan_pemasukan']) ?></td>
+                            <td><?= htmlspecialchars($row['keterangan_pengeluaran']) ?></td>
                             <td class="font-weight-bold">Rp <?= number_format($row['saldo'], 0, ',', '.') ?></td>
                             <td>
-                                <a href="manage_edit.php?id=<?= $row['nomor'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="edit_uang.php?id=<?= $row['nomor'] ?>" class="btn btn-sm btn-warning">Edit</a>
                                 <a href="manage_uang.php?hapus=<?= $row['nomor'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Hapus data ini?')">Hapus</a>
                             </td>
                         </tr>

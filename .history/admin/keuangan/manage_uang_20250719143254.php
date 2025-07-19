@@ -14,38 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_data'])) {
     $keterangan = $_POST['keterangan'] ?? '';
     $pemasukan = $_POST['pemasukan'] ?? 0;
     $pengeluaran = $_POST['pengeluaran'] ?? 0;
+    
 
     // Hitung saldo baru
     $saldo_akhir = ($pemasukan - $pengeluaran);
 
-    // Corrected: 5 columns, 5 placeholders, 5 variables, 5 type specifiers
     $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, keterangan, pemasukan, pengeluaran, saldo)
-                           VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("siisi", $tanggal, $keterangan, $pemasukan, $pengeluaran, $saldo_akhir);
+                           VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("siissi", $tanggal,$keterangan, $pemasukan, $pengeluaran,  $saldo_akhir);
     $stmt->execute();
 
     header("Location: manage_uang.php?status=success&message=Data keuangan berhasil ditambahkan");
     exit;
 }
-
-// Process automatic data from rentals (assuming this logic is still desired)
-$auto_pengeluaran_query = "SELECT tanggal_kembali as tanggal, biaya as pengeluaran, CONCAT('Otomatis dari penyewaan ID: ', id) as keterangan
-                            FROM penyewaan_barang WHERE status='dikembalikan' AND biaya > 0";
-$auto_result = $conn->query($auto_pengeluaran_query);
-
-while ($row = $auto_result->fetch_assoc()) {
-    $tanggal = $row['tanggal'];
-    $pengeluaran = $row['pengeluaran'];
-    $keterangan = $row['keterangan'];
-    $pemasukan = 0; // For automatic pengeluaran, pemasukan is 0
-    $saldo_akhir = -$pengeluaran;
-
-    $stmt = $conn->prepare("INSERT INTO keuangan (tanggal, keterangan, pemasukan, pengeluaran, saldo)
-                           VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("siisi", $tanggal, $keterangan, $pemasukan, $pengeluaran, $saldo_akhir);
-    $stmt->execute();
-}
-
 
 // Proses hapus data
 if (isset($_GET['hapus']) && is_numeric($_GET['hapus'])) {
