@@ -65,8 +65,13 @@ include '../header.php';
                     </td>
                     <td><?php echo htmlspecialchars($row['status']); ?></td>
                     <td>
-                        <a href="../../public/legalisasi_detail.php?id=<?php echo $row['id']; ?>">
-                               lihat        
+                        <a href="../public/legalisasi_detail.php?id=<?php echo $row['id']; ?>"
+                            class="group inline-flex items-center px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            Detail
                         </a>
                     <td>
                         <a href="legalisasi_edit.php?id=<?php echo $row['id']; ?>">Edit</a> |

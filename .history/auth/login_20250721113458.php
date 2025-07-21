@@ -38,42 +38,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blue Login Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .glass-input {
             background: rgba(59, 130, 246, 0.2);
             border: 1px solid rgba(147, 197, 253, 0.3);
             backdrop-filter: blur(10px);
         }
-        
+
         .glass-input:focus {
             background: rgba(59, 130, 246, 0.3);
             border-color: rgba(147, 197, 253, 0.5);
             box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.3);
         }
-        
+
         .login-btn {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-        
+
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-300 flex items-center justify-center p-4">
     <div class="w-full max-w-md">
         <!-- Profile Picture -->
         <div class="flex justify-center mb-8">
-            <div>
-                <img src="../public/assets/imgs/rev-removebg-preview.png" style="max-width:80px;">
+            <div class="w-20 h-20 bg-light-white-100 rounded-full">
+                <img src="../public/assets/imgs/rev-removebg-preview.png">
             </div>
         </div>
 
@@ -97,8 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id="username"
                     placeholder="Username"
                     class="glass-input w-full pl-12 pr-4 py-4 rounded-full text-white placeholder-blue-100 focus:outline-none transition-all duration-200"
-                    required
-                />
+                    required />
             </div>
 
             <!-- Password Field -->
@@ -114,8 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id="password"
                     placeholder="Password"
                     class="glass-input w-full pl-12 pr-4 py-4 rounded-full text-white placeholder-blue-100 focus:outline-none transition-all duration-200"
-                    required
-                />
+                    required />
             </div>
 
             <!-- Remember Me & Forgot Password -->
@@ -124,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input
                         type="checkbox"
                         id="remember"
-                        class="checkbox-custom"
-                    />
+                        class="checkbox-custom" />
                     <span class="text-blue-100">Remember Me</span>
                 </label>
                 <a href="#" class="text-blue-100 hover:text-white transition-colors duration-200">
@@ -136,11 +136,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Login Button -->
             <button
                 type="submit"
-                class="login-btn w-full py-4 text-blue-600 font-semibold rounded-full focus:outline-none"
-            >
+                class="login-btn w-full py-4 text-blue-600 font-semibold rounded-full focus:outline-none">
                 LOGIN
             </button>
         </form>
     </div>
 </body>
+
 </html>

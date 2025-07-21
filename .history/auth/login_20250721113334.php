@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-full max-w-md">
         <!-- Profile Picture -->
         <div class="flex justify-center mb-8">
-            <div>
-                <img src="../public/assets/imgs/rev-removebg-preview.png" style="max-width:80px;">
+            <div class="w-12 h-12 bg-light-blue-100 rounded-full ">
+                <img src="../public/assets/imgs/rev-removebg-preview.png">
             </div>
         </div>
 

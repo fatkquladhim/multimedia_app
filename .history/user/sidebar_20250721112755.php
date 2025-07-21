@@ -1,10 +1,10 @@
  <div id="sidebar" class="w-64 bg-white dark:bg-slate-800 shadow-xl flex-shrink-0 sidebar transition-all duration-300 overflow-hidden glass-effect">
      <div class="p-4 flex items-center justify-between border-b border-light-blue-100 dark:border-slate-700">
          <div class="flex items-center space-x-6">
-             <div class="w-12 h-12 bg-light-blue-100 rounded-full flex items-center justify-center">
-                 <img src="../../public/assets/imgs/rev-removebg-preview.png">
+             <div class="w-10 h-10 bg-light-blue-500 rounded-lg flex items-center justify-center">
+                 <i class="fas fa-home text-white text-xl"></i>
              </div>
-             <h1 class="text-xl font-bold text-gray-800 dark:text-white">Multimedia</h1>
+             <img src="../../public/assets/imgs/rev-removebg-preview.png">
          </div>
          <button id="closeSidebar" class="md:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
              <i class="fas fa-times"></i>

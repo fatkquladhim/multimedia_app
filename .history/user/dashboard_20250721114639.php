@@ -415,7 +415,7 @@ $stmt_profile->close();
             </header>
             <main class="flex-1 p-4 md:p-6">
                 <!-- Welcome Section -->
-                <div class="gradient-bg2 rounded-2xl p-6 mb-8 text-white animate-fade-in">
+                <div class="gradient-bg rounded-2xl p-6 mb-8 text-white animate-fade-in">
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-2xl font-bold mb-2">Selamat Datang, <?php echo $profile_name; ?>!</h2>

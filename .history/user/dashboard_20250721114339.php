@@ -278,11 +278,9 @@ $stmt_profile->close();
         }
 
         .gradient-bg {
-           background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-        }
-        .gradient-bg2 {
             background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
         }
+
         .gradient-card {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
@@ -319,7 +317,7 @@ $stmt_profile->close();
     </style>
 </head>
 
-<body class="gradient-bg dark-mode-transition">
+<body class="dark-mode-transition">
     <div id="sidebarOverlay" class="sidebar-overlay md:hidden"></div>
     <div class="min-h-screen flex">
         <!-- Sidebar -->
@@ -415,7 +413,7 @@ $stmt_profile->close();
             </header>
             <main class="flex-1 p-4 md:p-6">
                 <!-- Welcome Section -->
-                <div class="gradient-bg2 rounded-2xl p-6 mb-8 text-white animate-fade-in">
+                <div class="gradient-bg rounded-2xl p-6 mb-8 text-white animate-fade-in">
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-2xl font-bold mb-2">Selamat Datang, <?php echo $profile_name; ?>!</h2>

@@ -65,7 +65,7 @@ include '../header.php';
                     </td>
                     <td><?php echo htmlspecialchars($row['status']); ?></td>
                     <td>
-                        <a href="../../public/legalisasi_detail.php?id=<?php echo $row['id']; ?>">
+                        <a href="../public/legalisasi_detail.php?id=<?php echo $row['id']; ?>">
                                lihat        
                         </a>
                     <td>
