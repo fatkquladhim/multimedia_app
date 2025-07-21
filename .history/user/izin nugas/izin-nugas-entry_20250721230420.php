@@ -78,21 +78,7 @@ include '../header.php';
     <title>Ajukan Izin nugas</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .form-input {
-            @apply mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out;
-        }
-        .btn-primary {
-            @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-200 ease-in-out;
-        }
-        .message {
-            @apply p-3 mb-4 rounded-md text-sm;
-        }
-        .message.success {
-            @apply bg-green-100 text-green-700;
-        }
-        .message.error {
-            @apply bg-red-100 text-red-700;
-        }
+        
         .glass-header {
             background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
             backdrop-filter: blur(20px);
