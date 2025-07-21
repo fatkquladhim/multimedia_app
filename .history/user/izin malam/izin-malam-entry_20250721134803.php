@@ -18,59 +18,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $alasan = $_POST['alasan'] ?? '';
     $id_anggota = $_SESSION['user_id'];
 
-    // Validasi input kosong
-    if (empty($tanggal) || empty($jam_izin) || empty($jam_selesai_izin) || empty($alasan)) {
-        $message = 'Semua field harus diisi!';
-        $message_type = 'error';
-    } else {
-        // Cek apakah user ada di tabel anggota
-        $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . (int)$id_anggota);
-        if ($result_anggota && $result_anggota->num_rows > 0) {
-            // Cek apakah sudah pernah izin di tanggal yang sama (opsional)
-            $check = $conn->prepare('SELECT id FROM izin_malam WHERE id_anggota = ? AND tanggal = ?');
-            $check->bind_param('is', $id_anggota, $tanggal);
-            $check->execute();
-            $check->store_result();
-
-            if ($check->num_rows > 0) {
-                $message = 'Kamu sudah mengajukan izin malam di tanggal tersebut.';
-                $message_type = 'error';
-            } else {
-                // Simpan data
-                $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan) VALUES (?, ?, ?, ?, ?)');
-                $stmt->bind_param('issss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan);
-                if ($stmt->execute()) {
-                    header("Location: " . $_SERVER['PHP_SELF'] . "?sukses=1");
-                    exit;
-                } else {
-                    $message = 'Gagal mengajukan izin malam. Coba lagi.';
-                    $message_type = 'error';
-                }
-                $stmt->close();
-            }
-            $check->close();
+    // Validasi: cek apakah id user ada di anggota
+    $result_anggota = $conn->query('SELECT id FROM anggota WHERE id = ' . $id_anggota); // Direct query for check
+    if ($result_anggota->num_rows > 0) {
+        $stmt = $conn->prepare('INSERT INTO izin_malam (id_anggota, tanggal, jam_izin, jam_selesai_izin, alasan) VALUES (?, ?, ?, ?, ?)');
+        $stmt->bind_param('issss', $id_anggota, $tanggal, $jam_izin, $jam_selesai_izin, $alasan);
+        if ($stmt->execute()) {
+            $message = 'izin malam berhasil dikirim!';
+            $message_type = 'success';
         } else {
-            $message = 'Akun Anda belum terdaftar sebagai anggota.';
+            $message = 'Gagal mengajukan izin malam. Pastikan akun Anda terdaftar sebagai anggota.';
             $message_type = 'error';
         }
-        $result_anggota->close();
+        $stmt->close();
+    } else {
+        $message = 'Akun Anda belum terdaftar sebagai anggota. Hubungi admin untuk pendaftaran.';
+        $message_type = 'error';
     }
+    $result_anggota->close();
 }
 
-if (isset($_GET['sukses'])) {
-    $message = 'Izin malam berhasil dikirim!';
-    $message_type = 'success';
-}
-
-// Ambil data profil
-$profile_name = "User ";
-$profile_photo = "default_profile.jpg";
-$id_user = $_SESSION['user_id'];
+// Fetch profile information before closing the connection
+$profile_name = "User "; // Default
+$profile_photo = "default_profile.jpg"; // Default
+$id_user = $_SESSION['user_id']; // Make sure to get the user ID from the session
 
 include '../header_beckend.php';
 include '../header.php';
 ?>
-
 
 <main class="p-6">
     <?php if ($message): ?>

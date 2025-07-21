@@ -51,7 +51,7 @@ $stmt_profile->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>Multimedia Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -506,7 +506,7 @@ $stmt_profile->close();
                                     </div>
 
                                     <?php if (!$row['jawaban_id']): ?>
-                                        <a href="<?= $action_link ?>" class="inline-flex items-center px-4 py-2 bg-primary-600 text-black rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+                                        <a href="<?= $action_link ?>" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
                                             <i class="fas fa-play mr-2"></i>
                                             <?= $action_text ?>
                                         </a>

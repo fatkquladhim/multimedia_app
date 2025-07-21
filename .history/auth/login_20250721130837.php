@@ -214,11 +214,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <!-- Login Button -->
+            <div class="glass-header px-8 py-6 text-white relative z-10">
                 <button
                     type="submit"
-                    class="login-btn w-full py-2 font-semibold rounded-full focus:outline-none glass-header px-6 py-4 text-white relative z-10">
+                    class="glass-header px-8 py-6 text-white relative z-10">
                     LOGIN
                 </button>
+            </div>
         </form>
     </div>
 </body>

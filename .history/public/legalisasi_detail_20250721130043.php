@@ -429,7 +429,7 @@ if (isset($_GET['id'])) {
                             <div id="qrcode" class="mb-4 flex justify-center"></div>
                             <div class="flex items-center justify-center text-blue-600">
                                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
                                 </svg>
                                 <p class="font-semibold">Scan untuk memverifikasi keaslian dokumen</p>
                             </div>

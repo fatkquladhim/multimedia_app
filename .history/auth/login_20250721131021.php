@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Login Button -->
                 <button
                     type="submit"
-                    class="login-btn w-full py-2 font-semibold rounded-full focus:outline-none glass-header px-6 py-4 text-white relative z-10">
+                    class="login-btn w-full py-4 font-semibold rounded-full focus:outline-none glass-header px-8 py-6 text-white relative z-10">
                     LOGIN
                 </button>
         </form>

@@ -96,7 +96,7 @@ include '../header.php';
                 <input type="text" id="alasan" name="alasan" placeholder="Alasan" required>
             </div>
             <div class="flex space-x-4 mt-6">
-                <button type="submit" class="btn btn-primary">Ajukan</button>
+                <button type="submit" class="btn btn-primary" onclick="this.disabled=true; this.form.submit();">Ajukan</button>
             </div>
         </form>
     </div>

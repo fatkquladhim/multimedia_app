@@ -10,7 +10,7 @@ $id_user = $_SESSION['user_id'];
 $id_tugas = $_GET['id'] ?? null;
 
 if (!$id_tugas) {
-    header('Location: ../dashboard.php?status=error&message=ID tugas tidak valid.');
+    header('Location: tugas_user.php?status=error&message=ID tugas tidak valid.');
     exit;
 }
 
@@ -34,17 +34,17 @@ $tugas = $result->fetch_assoc();
 $stmt->close();
 
 if (!$tugas) {
-    header('Location:../dashboard.php?status=error&message=Tugas tidak ditemukan atau bukan tugas Anda.');
+    header('Location: dashboard.php?status=error&message=Tugas tidak ditemukan atau bukan tugas Anda.');
     exit;
 }
 
 if ($tugas['jawaban_id']) {
-    header('Location: ../dashboard.php?status=info&message=Tugas ini sudah Anda kerjakan.');
+    header('Location: dashboard.php?status=info&message=Tugas ini sudah Anda kerjakan.');
     exit;
 }
 
 if (strtotime($tugas['deadline']) < strtotime(date('Y-m-d'))) {
-    header('Location:../dashboard.php?status=error&message=Tugas ini sudah melewati deadline.');
+    header('Location: dashboard.php?status=error&message=Tugas ini sudah melewati deadline.');
     exit;
 }
 include '../header_beckend.php';

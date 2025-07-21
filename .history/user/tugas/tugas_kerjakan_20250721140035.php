@@ -1,9 +1,25 @@
 <?php
 session_start();
+
+// Set timeout session (misal 30 menit)
+$timeout_duration = 1800;
+
+if (isset($_SESSION['LAST_ACTIVITY']) &&
+    (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+    session_unset();
+    session_destroy();
+    header("Location: ../../auth/login.php?timeout=1");
+    exit;
+}
+
+$_SESSION['LAST_ACTIVITY'] = time(); // perbarui waktu aktif
+
+// Cek login dan role
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
+
 require_once '../../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $id_user = $_SESSION['user_id'];
