@@ -12,7 +12,7 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
-<div class="min-h-screen  from-blue-50 via-white to-purple-50">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- Header Section -->
         <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">

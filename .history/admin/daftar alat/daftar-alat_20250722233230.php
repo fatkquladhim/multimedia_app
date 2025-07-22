@@ -58,13 +58,13 @@ include '../header.php';
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-primary to-secondary text-white">
                         <tr>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">No</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Nama Alat</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Jumlah</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Kondisi</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Kelompok</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Milik</th>
-                            <th class="px-6 py-4 text-center text-black font-semibold uppercase tracking-wider">Aksi</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Alat</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Jumlah</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Kondisi</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Kelompok</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Milik</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">

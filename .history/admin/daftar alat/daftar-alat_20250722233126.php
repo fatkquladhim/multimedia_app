@@ -26,7 +26,7 @@ include '../header.php';
                     <p class="text-gray-600">Kelola inventaris alat dengan mudah dan efisien</p>
                 </div>
                 <a href="tambah-barang.php" 
-                   class="inline-flex items-center px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:bg-secondary transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                   class="inline-flex items-center px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-secondary transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -58,13 +58,13 @@ include '../header.php';
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-primary to-secondary text-white">
                         <tr>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">No</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Nama Alat</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Jumlah</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Kondisi</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Kelompok</th>
-                            <th class="px-6 py-4 text-left text-black font-semibold uppercase tracking-wider">Milik</th>
-                            <th class="px-6 py-4 text-center text-black font-semibold uppercase tracking-wider">Aksi</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Alat</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Jumlah</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Kondisi</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Kelompok</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Milik</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">

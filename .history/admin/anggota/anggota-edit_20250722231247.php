@@ -204,7 +204,9 @@ include '../header.php';
                 </div>
             </form>
         </div>      
+        </div>
     </div>
+</div>
 </main>
 <?php
 // Sertakan footer

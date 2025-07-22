@@ -33,7 +33,7 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
-<div class="min-h-screen from-gray-50 to-blue-50 py-8">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -268,6 +268,16 @@ include '../header.php';
                 </div>
                 <?php endif; ?>
             </div>
+        </div>
+
+        <!-- Back to Dashboard Link -->
+        <div class="mt-6 text-center">
+            <a href="../dashboard.php" class="inline-flex items-center text-gray-600 hover:text-blue-600 transition duration-200">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Kembali ke Dashboard
+            </a>
         </div>
     </div>
 </div>

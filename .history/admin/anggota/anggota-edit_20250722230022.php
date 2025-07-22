@@ -96,7 +96,7 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
-<div class="min-h-screen from-blue-50 via-white to-purple-50">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header Section -->
         <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
@@ -142,6 +142,11 @@ include '../header.php';
                                    value="<?php echo $edit_data['nama'] ?? ''; ?>" 
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pl-12">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
@@ -153,6 +158,11 @@ include '../header.php';
                                    placeholder="contoh@email.com" 
                                    value="<?php echo $edit_data['email'] ?? ''; ?>"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pl-12">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,6 +176,12 @@ include '../header.php';
                                    placeholder="Masukkan alamat lengkap" 
                                    value="<?php echo $edit_data['alamat'] ?? ''; ?>"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pl-12">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
@@ -177,6 +193,11 @@ include '../header.php';
                                    placeholder="08xxxxxxxxxx" 
                                    value="<?php echo $edit_data['no_hp'] ?? ''; ?>"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pl-12">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,9 +224,108 @@ include '../header.php';
                     </button>
                 </div>
             </form>
-        </div>      
+        </div>
+
+        <!-- Members List Section -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                    Daftar Anggota
+                </h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-blue-50 to-purple-50">
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">No HP</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Foto</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php
+                        $result = $conn->query('SELECT * FROM anggota ORDER BY id DESC');
+                        while ($row = $result->fetch_assoc()) {
+                        ?>
+                        <tr class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200">
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($row['nama']); ?></div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-600 max-w-xs truncate" title="<?php echo htmlspecialchars($row['alamat']); ?>">
+                                    <?php echo htmlspecialchars($row['alamat']); ?>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-600"><?php echo htmlspecialchars($row['email']); ?></div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-600"><?php echo htmlspecialchars($row['no_hp']); ?></div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <?php if ($row['foto']) { ?>
+                                    <div class="flex-shrink-0 h-16 w-16">
+                                        <img class="h-16 w-16 rounded-full object-cover border-2 border-gray-200 shadow-sm" 
+                                             src="../../<?php echo htmlspecialchars($row['foto']); ?>" 
+                                             alt="Foto Anggota">
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="flex-shrink-0 h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center">
+                                        <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                    </div>
+                                <?php } ?>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center space-x-3">
+                                    <a href="anggota-edit.php?edit=<?php echo $row['id']; ?>" 
+                                       class="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 text-sm font-medium">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <a href="anggota-edit.php?hapus=<?php echo $row['id']; ?>" 
+                                       onclick="return confirm('Yakin hapus anggota?')"
+                                       class="inline-flex items-center px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors duration-200 text-sm font-medium">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Hapus
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                        
+                        <?php if (mysqli_num_rows($result) == 0) { ?>
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                    </svg>
+                                    <p class="text-gray-500 text-lg font-medium">Belum ada data anggota</p>
+                                    <p class="text-gray-400 mt-1">Data yang Anda tambahkan akan muncul di sini</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</main>
+</div>
+
 <?php
 // Sertakan footer
 include '../footer.php';

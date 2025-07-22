@@ -14,7 +14,7 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
-<div class="min-h-screen  from-blue-50 to-indigo-100 py-8">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Card -->
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">

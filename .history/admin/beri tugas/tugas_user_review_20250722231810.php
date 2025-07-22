@@ -67,7 +67,7 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
-<div class="min-h-screen from-blue-50 to-indigo-100 py-8">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -237,6 +237,9 @@ include '../header.php';
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 placeholder-gray-400"
                                 placeholder="Masukkan nilai 0-100"
                             >
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <span class="text-gray-400 text-sm">/100</span>
+                            </div>
                         </div>
                     </div>
                     
