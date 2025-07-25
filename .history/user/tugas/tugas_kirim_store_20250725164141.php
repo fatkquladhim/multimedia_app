@@ -4,7 +4,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header('Location: ../../auth/login.php');
     exit;
 }
-
 require_once '../../includes/db_config.php';
 
 $id_user = $_SESSION['user_id'];
@@ -46,17 +45,17 @@ if (isset($_FILES['file_jawaban']) && $_FILES['file_jawaban']['error'] === UPLOA
     $file_size = $_FILES['file_jawaban']['size'];
     $file_ext = strtolower(pathinfo($_FILES['file_jawaban']['name'], PATHINFO_EXTENSION));
 
-    $allowed_ext = ['pdf', 'jpg', 'jpeg', 'png', 'mp4', 'mov', 'avi', 'mkv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
-    $max_file_size = 40 * 1024 * 1024; // 40 MB
+    $allowed_ext = $allowed_ext = ['pdf', 'jpg', 'jpeg', 'png', 'mp4', 'mov', 'avi', 'mkv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+    $max_file_size = 40* 1024 * 1024; // 40 MB
 
     if (!in_array($file_ext, $allowed_ext)) {
-        header('Location: tugas_kerjakan.php?id=' . $id_tugas . '&status=error&message=Format file tidak diizinkan. Hanya PDF, JPG, PNG, MP4, dll.');
+        header('Location: tugas_kerjakan.php?id=' . $id_tugas . '&status=error&message=Format file tidak diizinkan. Hanya PDF, JPG, PNG.');
         $conn->close();
         exit;
     }
 
     if ($file_size > $max_file_size) {
-        header('Location: tugas_kerjakan.php?id=' . $id_tugas . '&status=error&message=Ukuran file terlalu besar. Maksimal 40MB.');
+        header('Location: tugas_kerjakan.php?id=' . $id_tugas . '&status=error&message=Ukuran file terlalu besar. Maksimal 5MB.');
         $conn->close();
         exit;
     }
@@ -99,6 +98,52 @@ if ($stmt_insert_jawaban->execute()) {
     }
     error_log("Error inserting task answer: " . $stmt_insert_jawaban->error);
     header('Location: ../dashboard.php?status=error&message=Gagal mengirim jawaban. Silakan coba lagi.');
+}
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mime_type = finfo_file($finfo, $file_tmp_name);
+finfo_close($finfo);
+
+// Daftar MIME yang diizinkan
+$allowed_mime = [
+    'application/pdf',
+    'image/jpeg', 'image/png',
+    'video/mp4', 'video/quicktime', 'video/x-msvideo',
+    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+];
+
+if (!in_array($mime_type, $allowed_mime)) {
+    header('Location: tugas_kerjakan.php?id=' . $id_tugas . '&status=error&message=Format file tidak diizinkan.');
+    $conn->close();
+    exit;
+}
+
+if ($action == 'tolak') {
+    // Validasi untuk aksi tolak
+    if (!is_numeric($id_tugas)) {
+        header("Location: tugas_selesai_riwayat.php?status=error&message=ID tugas tidak valid untuk penolakan.");
+        exit;
+    }
+
+    // Update status tugas menjadi 'ditolak'
+    $stmt_tugas = $conn->prepare("UPDATE tugas SET status = 'ditolak' WHERE id = ?");
+    $stmt_tugas->bind_param("i", $id_tugas);
+
+    if ($stmt_tugas->execute()) {
+        // Hapus nilai dan komentar dari tugas_jawaban (opsional, tergantung kebutuhan)
+        // Jika ingin user submit ulang, nilai dan komentar sebelumnya harus direset
+        $stmt_jawaban_reset = $conn->prepare("UPDATE tugas_jawaban SET nilai = NULL, komentar = NULL WHERE id_tugas = ?");
+        $stmt_jawaban_reset->bind_param("i", $id_tugas);
+        $stmt_jawaban_reset->execute();
+        $stmt_jawaban_reset->close();
+
+        header("Location: tugas_selesai_riwayat.php?status=success&message=Tugas berhasil ditolak. Status diubah menjadi ditolak.");
+    } else {
+        error_log("Error rejecting task: " . $stmt_tugas->error);
+        header("Location: tugas_selesai_riwayat.php?status=error&message=Gagal menolak tugas. Silakan coba lagi.");
+    }
+    $stmt_tugas->close();
 }
 
 $stmt_insert_jawaban->close();

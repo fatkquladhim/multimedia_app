@@ -9,30 +9,31 @@ require_once '../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $id_user = $_SESSION['user_id'];
 
-// Ambil tugas yang diberikan ke user yang statusnya 'pending' atau 'ditolak'
-// Menghilangkan batasan deadline
+// Ambil tugas yang diberikan ke user yang statusnya 'pending' atau 'selesai' (jika belum dinilai)
+// Join dengan tugas_jawaban untuk mengecek apakah sudah ada jawaban
 $stmt = $conn->prepare('
-    SELECT
-        t.id,
-        t.judul,
-        t.deskripsi,
-        t.deadline,
-        t.status,
-        tj.id as jawaban_id,
-        tj.file_jawaban,
-        tj.nilai,
-        tj.komentar
-    FROM tugas t
-    LEFT JOIN tugas_jawaban tj ON t.id = tj.id_tugas AND tj.id_user = ?
-    WHERE t.id_penerima_tugas = ? AND t.status IN ("pending", "ditolak")
-    ORDER BY t.deadline ASC
-');
+        SELECT
+            t.id,
+            t.judul,
+            t.deskripsi,
+            t.deadline,
+            t.status,
+            tj.id as jawaban_id,
+            tj.file_jawaban,
+            tj.nilai,
+            tj.komentar
+        FROM tugas t
+        LEFT JOIN tugas_jawaban tj ON t.id = tj.id_tugas AND tj.id_user = ?
+        WHERE t.id_penerima_tugas = ? AND t.status IN ("pending", "dikirim")
+        ORDER BY t.deadline ASC
+    ');
+
 $stmt->bind_param('ii', $id_user, $id_user);
 $stmt->execute();
 $result = $stmt->get_result();
 
 // Fetch user profile for display
-$profile_name = "User "; // Default
+$profile_name = "User"; // Default
 $profile_photo = "default_profile.jpg"; // Default
 $stmt_profile = $conn->prepare('SELECT nama_lengkap, foto FROM profile WHERE id_user = ?');
 $stmt_profile->bind_param('i', $id_user);
@@ -294,15 +295,6 @@ $stmt_profile->close();
         }
 
 
-        .status-rejected {
-            background: linear-gradient(135deg, #fca5a5 0%, #ef4444 100%);
-            /* Light red to red */
-        }
-
-        .dark .status-rejected {
-            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
-            /* Darker red for dark mode */
-        }
 
         .status-pending {
             background: linear-gradient(146deg, #058cd0 0%, #e9f0ff00 100%);
@@ -479,6 +471,9 @@ $stmt_profile->close();
                 <!-- Task Section -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Tugas Masuk</h2>
+                    <!-- <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
+                            <i class="fas fa-arrow-right mr-2"></i>Lihat Semua
+                        </a> -->
                 </div>
 
                 <!-- Task Cards -->
@@ -486,88 +481,83 @@ $stmt_profile->close();
                     <?php if ($result->num_rows > 0): ?>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <?php
-                            // Inside the while ($row = $result->fetch_assoc()) loop:
-                            $card_class = 'status-pending'; // Default for pending/rejected
-                            $icon_class = 'fas fa-clock';
+                            $current_time = new DateTime();
+                            $deadline_time = new DateTime($row['deadline']);
+                            $is_late = $current_time > $deadline_time;
+
+                            // Status dan tampilan kartu
+                            $card_class = 'border-l-4 border-blue-500';
                             $status_text = 'Pending';
                             $action_text = 'Kerjakan';
-                            $action_link = "./tugas/tugas_kerjakan.php?id=" . $row['id'];
+                            $action_link = "tugas_kerjakan.php?id=" . $row['id'];
+                            $show_late_warning = false;
 
-                            // Check if the task is rejected
+                            // Jika status ditolak
                             if ($row['status'] == 'ditolak') {
-                                $card_class = 'status-rejected'; // CSS class for rejected tasks
-                                $icon_class = 'fas fa-times-circle'; // Icon for rejected
+                                $card_class = 'border-l-4 border-red-500 bg-red-50';
                                 $status_text = 'Ditolak';
-                                $action_text = 'Kerjakan Ulang'; // Action for rejected tasks
-                                $action_link = "./tugas/tugas_kerjakan.php?id=" . $row['id']; // Allow re-submission
+                                $action_text = 'Kerjakan Ulang';
+                                $action_link = "tugas_kerjakan.php?id=" . $row['id'];
                             }
-                            // Check if the task has been submitted and is awaiting review
-                            elseif ($row['jawaban_id'] && $row['status'] == 'dikirim') {
-                                $card_class = 'status-waiting';
-                                $icon_class = 'fas fa-hourglass-half';
+
+                            // Jika status dikirim
+                            if ($row['status'] == 'dikirim') {
+                                $card_class = 'border-l-4 border-yellow-500';
                                 $status_text = 'Menunggu Penilaian';
                                 $action_text = 'Sudah Dikerjakan';
-                                $action_link = '#'; // No action needed, just display status
+                                $action_link = "#";
                             }
-                            // Check if the task is completed
-                            elseif ($row['status'] == 'selesai') {
-                                $card_class = 'status-completed';
-                                $icon_class = 'fas fa-check-circle';
-                                $status_text = 'Selesai';
-                                $action_text = 'Lihat Detail'; // Or 'Lihat Nilai' if applicable
-                                $action_link = './tugas/tugas_detail.php?id=' . $row['id'];
+
+                            // Jika sudah lewat deadline
+                            if ($is_late) {
+                                $show_late_warning = true;
+                                // Jika tugas ditolak, tetap bisa dikerjakan ulang
+                                if ($row['status'] == 'ditolak') {
+                                    $action_text = 'Kerjakan Ulang';
+                                    $action_link = "tugas_kerjakan.php?id=" . $row['id'];
+                                }
                             }
                             ?>
 
-                            <div class="<?= $card_class ?> rounded-2xl p-6 card-hover animate-fade-in transform transition-all duration-300">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center shadow-sm">
-                                            <i class="<?= $icon_class ?> text-primary-600 dark:text-primary-400 text-lg"></i>
+                            <div class="card <?= $card_class ?> shadow-md mb-4">
+                                <div class="p-4">
+                                    <?php if ($show_late_warning): ?>
+                                        <div class="mb-3 p-2 bg-red-100 text-red-800 rounded text-sm flex items-center">
+                                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                                            Tugas ini sudah melewati deadline
                                         </div>
+                                    <?php endif; ?>
+
+                                    <h3 class="font-semibold text-lg"><?= htmlspecialchars($row['judul']) ?></h3>
+                                    <p class="text-gray-600 mb-2"><?= htmlspecialchars($row['deskripsi']) ?></p>
+
+                                    <div class="flex justify-between items-center mt-3">
                                         <div>
-                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white"><?php echo htmlspecialchars($row['judul']); ?></h3>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                <i class="fas fa-calendar-alt mr-1"></i>
-                                                <?php echo date('d M Y', strtotime($row['deadline'])); ?>
-                                            </p>
+                                            <span class="text-sm <?= $is_late ? 'text-red-600' : 'text-gray-500' ?>">
+                                                <i class="fas fa-calendar-day mr-1"></i>
+                                                Deadline: <?= date('d M Y H:i', strtotime($row['deadline'])) ?>
+                                                <?php if ($is_late): ?>
+                                                    <span class="ml-2 text-red-600">(Terlambat)</span>
+                                                <?php endif; ?>
+                                            </span>
                                         </div>
-                                    </div>
-                                    <span class="px-3 py-1 bg-white dark:bg-gray-800 text-xs font-medium rounded-full text-gray-700 dark:text-gray-300">
-                                        <?= $status_text ?>
-                                    </span>
-                                </div>
 
-                                <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-                                    <?php echo nl2br(htmlspecialchars(substr($row['deskripsi'], 0, 100))); ?>
-                                    <?php if (strlen($row['deskripsi']) > 100) echo '...'; ?>
-                                </p>
-
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-2">
-                                        <?php if ($row['nilai']): ?>
-                                            <div class="flex items-center space-x-1">
-                                                <i class="fas fa-star text-yellow-500"></i>
-                                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    <?php echo $row['nilai']; ?>
-                                                </span>
-                                            </div>
+                                        <?php if ($row['status'] == 'pending' || $row['status'] == 'ditolak'): ?>
+                                            <a href="<?= $action_link ?>" 
+                                               class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                                                <i class="fas fa-edit mr-1"></i>
+                                                <?= $action_text ?>
+                                            </a>
+                                        <?php elseif ($row['status'] == 'dikirim'): ?>
+                                            <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm">
+                                                <i class="fas fa-check mr-1"></i>
+                                                <?= $action_text ?>
+                                            </span>
                                         <?php endif; ?>
                                     </div>
-
-                                    <?php if (!$row['jawaban_id']): ?>
-                                        <a href="<?= $action_link ?>" class="inline-flex items-center px-4 py-2 bg-primary-600 text-black rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
-                                            <i class="fas fa-play mr-2"></i>
-                                            <?= $action_text ?>
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                                            <i class="fas fa-check mr-1"></i>
-                                            <?= $action_text ?>
-                                        </span>
-                                    <?php endif; ?>
                                 </div>
                             </div>
+
                         <?php endwhile; ?>
                     <?php else: ?>
                         <div class="col-span-full text-center py-12">

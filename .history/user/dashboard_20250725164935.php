@@ -9,8 +9,8 @@ require_once '../includes/db_config.php';
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $id_user = $_SESSION['user_id'];
 
-// Ambil tugas yang diberikan ke user yang statusnya 'pending' atau 'ditolak'
-// Menghilangkan batasan deadline
+// Ambil tugas yang diberikan ke user yang statusnya 'pending' atau 'selesai' (jika belum dinilai)
+// Join dengan tugas_jawaban untuk mengecek apakah sudah ada jawaban
 $stmt = $conn->prepare('
     SELECT
         t.id,
@@ -24,7 +24,7 @@ $stmt = $conn->prepare('
         tj.komentar
     FROM tugas t
     LEFT JOIN tugas_jawaban tj ON t.id = tj.id_tugas AND tj.id_user = ?
-    WHERE t.id_penerima_tugas = ? AND t.status IN ("pending", "ditolak")
+    WHERE t.id_penerima_tugas = ? AND t.status IN ("pending")
     ORDER BY t.deadline ASC
 ');
 $stmt->bind_param('ii', $id_user, $id_user);
@@ -32,7 +32,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 // Fetch user profile for display
-$profile_name = "User "; // Default
+$profile_name = "User"; // Default
 $profile_photo = "default_profile.jpg"; // Default
 $stmt_profile = $conn->prepare('SELECT nama_lengkap, foto FROM profile WHERE id_user = ?');
 $stmt_profile->bind_param('i', $id_user);
@@ -294,15 +294,6 @@ $stmt_profile->close();
         }
 
 
-        .status-rejected {
-            background: linear-gradient(135deg, #fca5a5 0%, #ef4444 100%);
-            /* Light red to red */
-        }
-
-        .dark .status-rejected {
-            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
-            /* Darker red for dark mode */
-        }
 
         .status-pending {
             background: linear-gradient(146deg, #058cd0 0%, #e9f0ff00 100%);
@@ -327,8 +318,7 @@ $stmt_profile->close();
         .dark .status-completed {
             background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
         }
-
-        .glass-header {
+                .glass-header {
             background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -479,6 +469,9 @@ $stmt_profile->close();
                 <!-- Task Section -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Tugas Masuk</h2>
+                    <!-- <a href="./tugas/riwayat_tugas.php" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
+                            <i class="fas fa-arrow-right mr-2"></i>Lihat Semua
+                        </a> -->
                 </div>
 
                 <!-- Task Cards -->
@@ -486,35 +479,23 @@ $stmt_profile->close();
                     <?php if ($result->num_rows > 0): ?>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <?php
-                            // Inside the while ($row = $result->fetch_assoc()) loop:
-                            $card_class = 'status-pending'; // Default for pending/rejected
+                            $card_class = 'status-pending';
                             $icon_class = 'fas fa-clock';
                             $status_text = 'Pending';
                             $action_text = 'Kerjakan';
                             $action_link = "./tugas/tugas_kerjakan.php?id=" . $row['id'];
 
-                            // Check if the task is rejected
-                            if ($row['status'] == 'ditolak') {
-                                $card_class = 'status-rejected'; // CSS class for rejected tasks
-                                $icon_class = 'fas fa-times-circle'; // Icon for rejected
-                                $status_text = 'Ditolak';
-                                $action_text = 'Kerjakan Ulang'; // Action for rejected tasks
-                                $action_link = "./tugas/tugas_kerjakan.php?id=" . $row['id']; // Allow re-submission
-                            }
-                            // Check if the task has been submitted and is awaiting review
-                            elseif ($row['jawaban_id'] && $row['status'] == 'dikirim') {
+                            if ($row['jawaban_id'] && $row['status'] == 'dikirim') {
                                 $card_class = 'status-waiting';
                                 $icon_class = 'fas fa-hourglass-half';
                                 $status_text = 'Menunggu Penilaian';
                                 $action_text = 'Sudah Dikerjakan';
-                                $action_link = '#'; // No action needed, just display status
-                            }
-                            // Check if the task is completed
-                            elseif ($row['status'] == 'selesai') {
+                                $action_link = '#';
+                            } elseif ($row['jawaban_id'] && $row['selesai']) {
                                 $card_class = 'status-completed';
                                 $icon_class = 'fas fa-check-circle';
                                 $status_text = 'Selesai';
-                                $action_text = 'Lihat Detail'; // Or 'Lihat Nilai' if applicable
+                                $action_text = 'Lihat Nilai';
                                 $action_link = './tugas/tugas_detail.php?id=' . $row['id'];
                             }
                             ?>
@@ -617,8 +598,8 @@ $stmt_profile->close();
                     </div>
                 </div>
             </main>
-            <?php
-            // Sertakan footer
-            include './footer.php'; // Path relatif dari 'anggota/' ke 'includes/'
-            $conn->close();
-            ?>
+    <?php
+    // Sertakan footer
+    include './footer.php'; // Path relatif dari 'anggota/' ke 'includes/'
+    $conn->close();
+    ?>

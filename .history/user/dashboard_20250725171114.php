@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
@@ -295,15 +296,13 @@ $stmt_profile->close();
 
 
         .status-rejected {
-            background: linear-gradient(135deg, #fca5a5 0%, #ef4444 100%);
-            /* Light red to red */
+            background: linear-gradient(135deg, #fca5a5 0%, #ef4444 100%); /* Light red to red */
         }
 
         .dark .status-rejected {
-            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
-            /* Darker red for dark mode */
+            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%); /* Darker red for dark mode */
         }
-
+        
         .status-pending {
             background: linear-gradient(146deg, #058cd0 0%, #e9f0ff00 100%);
         }
@@ -327,8 +326,7 @@ $stmt_profile->close();
         .dark .status-completed {
             background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
         }
-
-        .glass-header {
+                .glass-header {
             background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -485,7 +483,7 @@ $stmt_profile->close();
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     <?php if ($result->num_rows > 0): ?>
                         <?php while ($row = $result->fetch_assoc()): ?>
-                            <?php
+                            <?php              
                             // Inside the while ($row = $result->fetch_assoc()) loop:
                             $card_class = 'status-pending'; // Default for pending/rejected
                             $icon_class = 'fas fa-clock';
@@ -617,8 +615,10 @@ $stmt_profile->close();
                     </div>
                 </div>
             </main>
-            <?php
-            // Sertakan footer
-            include './footer.php'; // Path relatif dari 'anggota/' ke 'includes/'
-            $conn->close();
-            ?>
+    <?php
+    // Sertakan footer
+    include './footer.php'; // Path relatif dari 'anggota/' ke 'includes/'
+    $conn->close();
+    ?>
+</body>
+</html>
