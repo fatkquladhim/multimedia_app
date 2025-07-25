@@ -98,6 +98,15 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penyewaan Barang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
 <body class="bg-gradient-to-br from-blue-50 to-white min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- Header Section -->
@@ -128,8 +137,7 @@ include '../header.php';
                 </div>
             <?php endif; ?>
         </div>
-
-        <!-- Form Penyewaan Section -->
+        
         <!-- Form Penyewaan Section -->
         <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
             <div class="flex items-center space-x-3 mb-6">
@@ -138,110 +146,19 @@ include '../header.php';
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800">Form Penyewaan Baru</h2>
             </div>
-
+            
             <form method="POST" class="space-y-6">
                 <!-- Tipe Penyewa -->
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-user-tag text-blue-600 mr-2"></i>Tipe Penyewa
-                        </label>
-                        <select name="tipe_penyewa" id="tipe_penyewa" onchange="togglePenyewa()" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                            <option value="umum">Umum</option>
-                            <option value="anggota">Anggota</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Form Umum -->
-                <div id="form_umum" class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-user text-blue-600 mr-2"></i>Nama Penyewa
-                        </label>
-                        <input type="text" name="nama_penyewa" id="nama_penyewa" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-phone text-blue-600 mr-2"></i>Kontak Penyewa
-                        </label>
-                        <input type="text" name="kontak_penyewa" id="kontak_penyewa" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                    </div>
-                </div>
-
-                <!-- Form Anggota -->
-                <div id="form_anggota" style="display:none" class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-users text-blue-600 mr-2"></i>Pilih Anggota
-                        </label>
-                        <select name="id_anggota" id="id_anggota" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                            <option value="">Pilih Anggota</option>
-                            <?php while ($row = $anggota->fetch_assoc()): ?>
-                                <option value="<?php echo $row['id']; ?>">
-                                    <?php echo htmlspecialchars($row['nama']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Detail Penyewaan -->
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-tools text-blue-600 mr-2"></i>Alat
-                        </label>
-                        <select name="id_alat" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                            <option value="">Pilih Alat</option>
-                            <?php while ($row = $alat->fetch_assoc()): ?>
-                                <option value="<?php echo $row['id']; ?>">
-                                    <?php echo htmlspecialchars($row['nama_alat']); ?> (Stok: <?php echo $row['jumlah']; ?>)
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-hashtag text-blue-600 mr-2"></i>Jumlah
-                        </label>
-                        <input type="number" name="jumlah" min="1" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-money-bill text-blue-600 mr-2"></i>Biaya
-                        </label>
-                        <input type="number" name="biaya" min="0" step="1000" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            <i class="fas fa-calendar text-blue-600 mr-2"></i>Tanggal Sewa
-                        </label>
-                        <input type="date" name="tanggal_sewa" value="<?php echo date('Y-m-d'); ?>" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
                             <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>Tanggal Kembali
                         </label>
-                        <input type="date" name="tanggal_kembali"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
+                        <input type="date" name="tanggal_kembali" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200">
                     </div>
                 </div>
-
+                
                 <!-- Submit Button -->
                 <div class="flex justify-end">
                     <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -250,7 +167,7 @@ include '../header.php';
                 </div>
             </form>
         </div>
-
+        
         <!-- Daftar Penyewaan Aktif -->
         <div class="bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden">
             <div class="p-8 border-b border-gray-200">
@@ -261,7 +178,7 @@ include '../header.php';
                     <h2 class="text-2xl font-bold text-gray-800">Daftar Penyewaan Aktif</h2>
                 </div>
             </div>
-
+            
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
@@ -280,82 +197,82 @@ include '../header.php';
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <?php
+                        <?php 
                         $no = 1;
-                        while ($row = $result->fetch_assoc()):
+                        while($row = $result->fetch_assoc()): 
                         ?>
-                            <tr class="hover:bg-blue-50 transition-colors duration-200">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $no++; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="bg-blue-100 p-2 rounded-full mr-3">
-                                            <i class="fas fa-user text-blue-600 text-xs"></i>
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($row['nama_penyewa']); ?></span>
+                        <tr class="hover:bg-blue-50 transition-colors duration-200">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $no++; ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                        <i class="fas fa-user text-blue-600 text-xs"></i>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><?php echo htmlspecialchars($row['kontak']); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <?php echo $row['tipe_penyewa'] === 'anggota' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; ?>">
-                                        <?php echo htmlspecialchars($row['tipe_penyewa']); ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($row['nama_alat']); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    <?php
-                                    if (!empty($row['tanggal_sewa']) && $row['tanggal_sewa'] !== '0000-00-00') {
-                                        echo date('d/m/Y', strtotime($row['tanggal_sewa']));
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    <?php
-                                    if (!empty($row['tanggal_kembali']) && $row['tanggal_kembali'] !== '0000-00-00') {
-                                        echo date('d/m/Y', strtotime($row['tanggal_kembali']));
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        <?php echo $row['jumlah']; ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
-                                    Rp <?php echo number_format($row['biaya'], 0, ',', '.'); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <?php if ($row['status'] === 'disewa'): ?>
-                                        <form method="POST" style="display:inline;">
-                                            <input type="hidden" name="kembalikan_id" value="<?php echo $row['id']; ?>">
-                                            <button type="submit" onclick="return confirm('Tandai sebagai sudah dikembalikan?')"
+                                    <span class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($row['nama_penyewa']); ?></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><?php echo htmlspecialchars($row['kontak']); ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <?php echo $row['tipe_penyewa'] === 'anggota' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; ?>">
+                                    <?php echo htmlspecialchars($row['tipe_penyewa']); ?>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($row['nama_alat']); ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <?php 
+                                if (!empty($row['tanggal_sewa']) && $row['tanggal_sewa'] !== '0000-00-00') {
+                                    echo date('d/m/Y', strtotime($row['tanggal_sewa']));
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <?php 
+                                if (!empty($row['tanggal_kembali']) && $row['tanggal_kembali'] !== '0000-00-00') {
+                                    echo date('d/m/Y', strtotime($row['tanggal_kembali']));
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    <?php echo $row['jumlah']; ?>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                                Rp <?php echo number_format($row['biaya'], 0, ',', '.'); ?>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <?php if ($row['status'] === 'disewa'): ?>
+                                    <form method="POST" style="display:inline;">
+                                        <input type="hidden" name="kembalikan_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" onclick="return confirm('Tandai sebagai sudah dikembalikan?')" 
                                                 class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 hover:bg-red-200 transition-colors duration-200">
-                                                <i class="fas fa-clock mr-1"></i>Belum
-                                            </button>
-                                        </form>
-                                    <?php else: ?>
-                                        <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                            <i class="fas fa-check mr-1"></i>Sudah
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex space-x-2">
-                                        <a href="edit-barang-penyewaan.php?id=<?php echo $row['id']; ?>"
-                                            class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-lg transition-colors duration-200 text-xs">
-                                            <i class="fas fa-edit mr-1"></i>Edit
-                                        </a>
-                                        <a href="hapus-penyewaan.php?id=<?php echo $row['id']; ?>"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus penyewaan ini?')"
-                                            class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-lg transition-colors duration-200 text-xs">
-                                            <i class="fas fa-trash mr-1"></i>Hapus
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                            <i class="fas fa-clock mr-1"></i>Belum
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                        <i class="fas fa-check mr-1"></i>Sudah
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    <a href="edit-barang-penyewaan.php?id=<?php echo $row['id']; ?>" 
+                                       class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-lg transition-colors duration-200 text-xs">
+                                        <i class="fas fa-edit mr-1"></i>Edit
+                                    </a>
+                                    <a href="hapus-penyewaan.php?id=<?php echo $row['id']; ?>" 
+                                       onclick="return confirm('Apakah Anda yakin ingin menghapus penyewaan ini?')"
+                                       class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-lg transition-colors duration-200 text-xs">
+                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -371,7 +288,7 @@ include '../header.php';
             const namaUmum = document.getElementById('nama_penyewa');
             const kontakUmum = document.getElementById('kontak_penyewa');
             const idAnggota = document.getElementById('id_anggota');
-
+            
             if (tipePenyewa === 'anggota') {
                 formUmum.style.display = 'none';
                 formAnggota.style.display = 'grid';
@@ -388,7 +305,6 @@ include '../header.php';
         }
     </script>
 </body>
-
 </html>
 
 <?php
@@ -396,3 +312,4 @@ include '../header.php';
 include '../footer.php';
 $conn->close();
 ?>
+                            

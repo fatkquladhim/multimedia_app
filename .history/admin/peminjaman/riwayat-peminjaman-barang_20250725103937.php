@@ -28,6 +28,29 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Peminjaman Barang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'blue-primary': '#1e40af',
+                        'blue-secondary': '#3b82f6',
+                        'blue-light': '#dbeafe',
+                        'blue-dark': '#1e3a8a'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
 <body class="bg-gradient-to-br from-blue-50 to-white min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- Header Section -->
@@ -36,14 +59,14 @@ include '../header.php';
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                         <div class="bg-blue-primary rounded-lg p-3">
-                            <i class="fas fa-history text-gray text-xl"></i>
+                            <i class="fas fa-history text-white text-xl"></i>
                         </div>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800">Riwayat Peminjaman Barang</h1>
                             <p class="text-gray-600 text-sm">Kelola riwayat peminjaman barang yang sudah dikembalikan</p>
                         </div>
                     </div>
-                    <a href="peminjaman-barang.php" class="bg-green-500 hover:bg-green-600 text-gray px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                    <a href="peminjaman-barang.php" class="bg-blue-primary hover:bg-blue-dark text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                         <i class="fas fa-arrow-left"></i>
                         <span>Kembali ke Daftar Peminjaman</span>
                     </a>
@@ -83,7 +106,7 @@ include '../header.php';
             
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-blue-primary text-black">
+                    <thead class="bg-blue-primary text-white">
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Peminjam</th>
@@ -184,7 +207,8 @@ include '../header.php';
             </div>
         </div>
     </div>
-</main>
+</body>
+</html>
 
 <?php
 // Sertakan footer

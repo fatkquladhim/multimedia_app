@@ -289,9 +289,9 @@ include '../header.php';
                     </div>
                     
                     <!-- Submit Button -->
-                    <div class="pt-6 border-t border-gray-200 flex justify-center">
+                    <div class="pt-6 border-t border-gray-200">
                         <button type="submit" 
-                                class="w-rounded px-6 py-4 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                class="w-full bg-blue-primary hover:bg-blue-dark text-white px-8 py-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg text-lg font-medium">
                             <i class="fas fa-plus"></i>
                             <span>Tambah Peminjaman</span>
                         </button>

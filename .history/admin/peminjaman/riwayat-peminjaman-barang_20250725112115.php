@@ -184,7 +184,8 @@ include '../header.php';
             </div>
         </div>
     </div>
-</main>
+</body>
+</html>
 
 <?php
 // Sertakan footer

@@ -98,7 +98,7 @@ include '../header.php';
                             <p class="text-gray-600 text-sm">Ubah data peminjaman barang</p>
                         </div>
                     </div>
-                    <a href="peminjaman-barang.php" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                    <a href="peminjaman-barang.php" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                         <i class="fas fa-arrow-left"></i>
                         <span>Kembali</span>
                     </a>
@@ -233,7 +233,7 @@ include '../header.php';
                         </a>
                         
                         <button type="submit" 
-                                class="bg-blue-500 hover:bg-blue-dark text-white px-8 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                                class="bg-blue hover:bg-blue-dark text-white px-8 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                             <i class="fas fa-save"></i>
                             <span>Update Peminjaman</span>
                         </button>

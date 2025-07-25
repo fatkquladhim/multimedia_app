@@ -43,7 +43,7 @@ include '../header.php';
                             <p class="text-gray-600 text-sm">Kelola riwayat peminjaman barang yang sudah dikembalikan</p>
                         </div>
                     </div>
-                    <a href="peminjaman-barang.php" class="bg-green-500 hover:bg-green-600 text-gray px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                    <a href="peminjaman-barang.php" class="bg-blue-primary hover:bg-blue-dark text-gray px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                         <i class="fas fa-arrow-left"></i>
                         <span>Kembali ke Daftar Peminjaman</span>
                     </a>
@@ -83,7 +83,7 @@ include '../header.php';
             
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-blue-primary text-black">
+                    <thead class="bg-blue-primary text-white">
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Peminjam</th>
@@ -184,7 +184,8 @@ include '../header.php';
             </div>
         </div>
     </div>
-</main>
+</body>
+</html>
 
 <?php
 // Sertakan footer

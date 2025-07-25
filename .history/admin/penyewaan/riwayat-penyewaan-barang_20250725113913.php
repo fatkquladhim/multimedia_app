@@ -241,7 +241,32 @@ include '../header.php';
             <?php endif; ?>
         </div>
     </div>
-</main>
+
+    <!-- Search Functionality -->
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            
+            rows.forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const contact = row.cells[2].textContent.toLowerCase();
+                const alat = row.cells[4].textContent.toLowerCase();
+                
+                if (name.includes(filter) || contact.includes(filter) || alat.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
+
 <?php
 // Sertakan footer
 include '../footer.php';

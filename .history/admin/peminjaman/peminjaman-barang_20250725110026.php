@@ -258,17 +258,23 @@ include '../header.php';
                             </label>
                             <div class="relative">
                                 <input type="date" name="tanggal_pinjam" value="<?php echo date('Y-m-d'); ?>" required
-                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all duration-200">          
+                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all duration-200">
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                                </div>
                             </div>
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
                                 <i class="fas fa-calendar-check text-blue-primary mr-2"></i>
-                                Tanggal Kembali 
+                                Tanggal Kembali (opsional)
                             </label>
                             <div class="relative">
                                 <input type="date" name="tanggal_kembali"
                                        class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all duration-200">
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-calendar-plus text-gray-400"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -289,9 +295,9 @@ include '../header.php';
                     </div>
                     
                     <!-- Submit Button -->
-                    <div class="pt-6 border-t border-gray-200 flex justify-center">
+                    <div class="pt-6 border-t border-gray-200">
                         <button type="submit" 
-                                class="w-rounded px-6 py-4 bg-light-blue-600 hover:bg-light-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                class="w-full bg-blue-primary hover:bg-blue-dark text-white px-8 py-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg text-lg font-medium">
                             <i class="fas fa-plus"></i>
                             <span>Tambah Peminjaman</span>
                         </button>
@@ -311,7 +317,7 @@ include '../header.php';
             
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-blue-primary text-black">
+                    <thead class="bg-blue-primary text-white">
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Peminjam</th>

@@ -83,6 +83,29 @@ include '../header_beckend.php';
 include '../header.php';
 ?>
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Peminjaman Barang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'blue-primary': '#1e40af',
+                        'blue-secondary': '#3b82f6',
+                        'blue-light': '#dbeafe',
+                        'blue-dark': '#1e3a8a'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
 <body class="bg-gradient-to-br from-blue-50 to-white min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header Section -->
@@ -91,14 +114,14 @@ include '../header.php';
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                         <div class="bg-blue-primary rounded-lg p-3">
-                            <i class="fas fa-edit text-gray text-xl"></i>
+                            <i class="fas fa-edit text-white text-xl"></i>
                         </div>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800">Edit Peminjaman Barang</h1>
                             <p class="text-gray-600 text-sm">Ubah data peminjaman barang</p>
                         </div>
                     </div>
-                    <a href="peminjaman-barang.php" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                    <a href="peminjaman-barang.php" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                         <i class="fas fa-arrow-left"></i>
                         <span>Kembali</span>
                     </a>
@@ -154,11 +177,17 @@ include '../header.php';
                                        value="<?php echo htmlspecialchars($peminjaman['nama_peminjam']); ?>" 
                                        disabled
                                        class="w-full px-4 py-3 pl-12 bg-gray-100 border border-gray-300 rounded-lg text-gray-600 cursor-not-allowed focus:outline-none">
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-user-circle text-gray-400"></i>
+                                </div>
                             <?php else: ?>
                                 <input type="text" 
                                        value="<?php echo htmlspecialchars($peminjaman['nama_anggota']); ?>" 
                                        disabled
                                        class="w-full px-4 py-3 pl-12 bg-gray-100 border border-gray-300 rounded-lg text-gray-600 cursor-not-allowed focus:outline-none">
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-id-badge text-gray-400"></i>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -186,7 +215,9 @@ include '../header.php';
                             <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
                                 <i class="fas fa-wrench text-gray-400"></i>
                             </div>
-                           
+                            <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
                         </div>
                     </div>
                     
@@ -203,6 +234,9 @@ include '../header.php';
                                    min="1" 
                                    required
                                    class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all duration-200">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                <i class="fas fa-calculator text-gray-400"></i>
+                            </div>
                         </div>
                     </div>
                     
@@ -217,6 +251,9 @@ include '../header.php';
                                    name="tanggal_kembali" 
                                    value="<?php echo $peminjaman['tanggal_kembali']; ?>"
                                    class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all duration-200">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                <i class="fas fa-calendar text-gray-400"></i>
+                            </div>
                         </div>
                         <p class="text-sm text-gray-500 flex items-center">
                             <i class="fas fa-info-circle mr-2"></i>
@@ -233,7 +270,7 @@ include '../header.php';
                         </a>
                         
                         <button type="submit" 
-                                class="bg-blue-500 hover:bg-blue-dark text-white px-8 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                                class="bg-blue-primary hover:bg-blue-dark text-white px-8 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
                             <i class="fas fa-save"></i>
                             <span>Update Peminjaman</span>
                         </button>
